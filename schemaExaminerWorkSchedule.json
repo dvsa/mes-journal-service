@@ -27,7 +27,7 @@
               "$id": "#/properties/examiner/properties/examinerName/properties/title",
               "description": "The examiner's title",
               "type": "string",
-              "maxLength": 255
+              "maxLength": 7
             },
             "firstName": {
               "$id": "#/properties/examiner/properties/examinerName/properties/firstName",

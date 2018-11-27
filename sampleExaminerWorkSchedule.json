@@ -13,7 +13,6 @@
     "costCode": "EXTC"
   },
   "testSlot": [
-    //an example unbooked test slot
     {
       "slotDetail": {
         "slotId": 1000,
@@ -27,7 +26,6 @@
         "costCode": "EXTC"
       }
     },
-    //an example booked test slot (with most of the optional data populated)
     {
       "slotDetail": {
         "slotId": 1001,
@@ -99,7 +97,6 @@
         }
       }
     },
-    //an example booked test slot (with the optional data unpopulated)
     {
       "slotDetail": {
         "slotId": 1002,
@@ -126,7 +123,6 @@
         }
       }
     },
-    //an example trainer booking (no candidate)
     {
       "slotDetail": {
         "slotId": 1003,
@@ -152,7 +148,6 @@
     }
   ],
   "personalCommitment": [
-    //an example short-term commitment (date and time)
     {
       "commitmentId": 123400,
       "startDate": "2012-10-08",
@@ -162,7 +157,6 @@
       "activityCode": "104",
       "activityDescription": "Medical appointment"
     },
-    //an example long-term commitment (all day between the specified dates)
     {
       "commitmentId": 123401,
       "startDate": "2012-10-15",
@@ -172,7 +166,6 @@
     }
   ],
   "nonTestActivity": [
-    //example non test activity (that clashes with a test above)
     {
       "slotId": 1001,
       "start": "2012-10-05T10:15:00+01:00",
@@ -183,7 +176,6 @@
       "centreName": "Example Test Centre",
       "costCode": "EXTC"
     },
-    //another example non test activity (that clashes with a personal commitment above)
     {
       "slotId": 1100,
       "start": "2012-10-15T10:15:00+01:00",
@@ -194,7 +186,6 @@
       "centreName": "Example Test Centre 2",
       "costCode": "EXTC2"
     },
-    //example non test activity (that doesn't clash)
     {
       "slotId": 1200,
       "start": "2012-10-22T10:15:00+01:00",
@@ -207,7 +198,6 @@
     }
   ],
   "advanceTestSlot": [
-    //example test slot
     {
       "slotId": 1300,
       "start": "2012-10-23T09:00:00+01:00",
@@ -217,7 +207,6 @@
       "costCode": "EXTC 3",
       "vehicleSlotType": "Voc90mins"
     },
-    //example test slot
     {
       "slotId": 1301,
       "start": "2012-10-23T10:45:00+01:00",
@@ -227,7 +216,6 @@
       "costCode": "EXTC 3",
       "vehicleSlotType": "Voc90mins"
     },
-    //example test slot
     {
       "slotId": 1302,
       "start": "2012-10-23T12:30:00+01:00",
@@ -239,7 +227,6 @@
     }
   ],
   "deployment": [
-    //example single-day deployment (goes with advance test slot above)
     {
       "deploymentId": 11111,
       "centreId": 76543,
@@ -247,7 +234,6 @@
       "costCode": "EXTC 3",
       "date": "2012-10-23"
     },
-    //example multi-day deployment (note the gap for the weekend)
     {
       "deploymentId": 22222,
       "centreId": 87654,
@@ -257,7 +243,6 @@
         "2012-10-24",
         "2012-10-25",
         "2012-10-26",
-        //gap for weekend
         "2012-10-29",
         "2012-10-30"
       ]
