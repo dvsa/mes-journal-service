@@ -1,5 +1,46 @@
 {
-  "definitions": {},
+  "definitions": {
+    "testCentre": {
+      "description": "Details of the test centre",
+      "type": "object",
+      "properties": {
+        "centreId": {
+          "description": "Identifier for the test centre",
+          "type": "integer"
+        },
+        "centreName": {
+          "description": "Name of the test centre",
+          "type": "string",
+          "maxLength": 50
+        },
+        "costCode": {
+          "description": "Cost centre code for the test centre",
+          "type": "string",
+          "maxLength": 6
+        }
+      }
+    },
+    "slotDetail": {
+      "description": "Details of the test slot",
+      "type": "object",
+      "properties": {
+        "slotId": {
+          "description": "Unique identifier for the test slot",
+          "type": "integer"
+        },
+        "start": {
+          "description": "Start time of the test slot",
+          "type": "string",
+          "minLength": 25,
+          "maxLength": 25
+        },
+        "duration": {
+          "description": "The length in minutes of the test slot",
+          "type": "integer"
+        }
+      }
+    }
+  },
   "$schema": "http://json-schema.org/draft-07/schema#",
   "id": "https://example.com/arrays.schema.json",
   "title": "Examiner Work Schedule",
@@ -62,53 +103,13 @@
       "description": "A test slot, possibly populated with booking data",
       "type": "array",
       "properties": {
-        "slotDetail": {
-          "$id": "#/properties/testSlot/properties/slotDetail",
-          "description": "Details of the test slot",
-          "type": "object",
-          "properties": {
-            "slotId": {
-              "description": "Unique identifier for the test slot",
-              "type": "integer"
-            },
-            "start": {
-              "description": "Start time of the test slot",
-              "type": "string",
-              "minLength": 25,
-              "maxLength": 25
-            },
-            "duration": {
-              "description": "The length in minutes of the test slot",
-              "type": "integer"
-            }
-          }
-        },
+        "slotDetail": {"$ref": "#/definitions/slotDetail"},
         "vehicleSlotType": {
           "description": "A short description of the Vehicle Slot Type, e.g. B57mins, Voc90mins, Hometest, if any",
           "type": "string",
           "maxLength": 11
         },
-        "testCentre": {
-          "$id": "#/properties/testSlot/properties/testCentre",
-          "description": "Details of the test centre",
-          "type": "object",
-          "properties": {
-            "centreId": {
-              "description": "Identifier for the test centre",
-              "type": "integer"
-            },
-            "centreName": {
-              "description": "Name of the test centre",
-              "type": "string",
-              "maxLength": 50
-            },
-            "costCode": {
-              "description": "Cost centre code for the test centre",
-              "type": "string",
-              "maxLength": 6
-            }
-          }
-        },
+        "testCentre": {"$ref": "#/definitions/testCentre"},
         "booking": {
           "$id": "#/properties/testSlot/properties/booking",
           "description": "If this slot is booked, this contains the details",
@@ -401,27 +402,7 @@
       "description": "An examiner's non test activity (associated with a test slot duration)",
       "type": "array",
       "properties": {
-        "slotDetail": {
-          "$id": "#/properties/nonTestActivity/properties/slotDetail",
-          "description": "The test slot whose duration is taken up by the non test activity",
-          "type": "object",
-          "properties": {
-            "slotId": {
-              "description": "Unique identifier for the test slot",
-              "type": "integer"
-            },
-            "start": {
-              "description": "Start time of the test slot",
-              "type": "string",
-              "minLength": 25,
-              "maxLength": 25
-            },
-            "duration": {
-              "description": "The length in minutes of the test slot",
-              "type": "integer"
-            }
-          }
-        },
+        "slotDetail": {"$ref": "#/definitions/slotDetail"},
         "activityCode": {
           "description": "The non test activity code",
           "type": "string",
@@ -432,27 +413,7 @@
           "type": "string",
           "maxLength": 50
         },
-        "testCentre": {
-          "$id": "#/properties/nonTestActivity/properties/testCentre",
-          "description": "The test centre of the test slot whose duration is taken up by the non test activity",
-          "type": "object",
-          "properties": {
-            "centreId": {
-              "description": "Identifier for the test centre",
-              "type": "integer"
-            },
-            "centreName": {
-              "description": "Name of the test centre",
-              "type": "string",
-              "maxLength": 50
-            },
-            "costCode": {
-              "description": "Cost centre code for the test centre",
-              "type": "string",
-              "maxLength": 6
-            }
-          }
-        }
+        "testCentre": {"$ref": "#/definitions/testCentre"}
       }
     },
     "advanceTestSlot": {
@@ -460,48 +421,8 @@
       "description": "Advance details of a test slot",
       "type": "array",
       "properties": {
-        "slotDetail": {
-          "$id": "#/properties/advanceTestSlot/properties/slotDetail",
-          "description": "The details of the advance test slot",
-          "type": "object",
-          "properties": {
-            "slotId": {
-              "description": "Unique identifier for the test slot",
-              "type": "integer"
-            },
-            "start": {
-              "description": "Start time of the advance test slot",
-              "type": "string",
-              "minLength": 25,
-              "maxLength": 25
-            },
-            "duration": {
-              "description": "The length in minutes of the advance test slot",
-              "type": "integer"
-            }
-          }
-        },
-        "testCentre": {
-          "$id": "#/properties/advanceTestSlot/properties/testCentre",
-          "description": "The test centre of the advance test slot",
-          "type": "object",
-          "properties": {
-            "centreId": {
-              "description": "Identifier for the test centre",
-              "type": "integer"
-            },
-            "centreName": {
-              "description": "Name of the test centre",
-              "type": "string",
-              "maxLength": 50
-            },
-            "costCode": {
-              "description": "Cost centre code for the test centre",
-              "type": "string",
-              "maxLength": 6
-            }
-          }
-        },
+        "slotDetail": {"$ref": "#/definitions/slotDetail"},
+        "testCentre": {"$ref": "#/definitions/testCentre"},
         "vehicleSlotType": {
           "description": "A short description of the Vehicle Slot Type, e.g. B57mins, Voc90mins, Hometest, if any",
           "type": "string",
@@ -518,27 +439,7 @@
           "description": "The deployment id",
           "type": "integer"
         },
-        "testCentre": {
-          "$id": "#/properties/deployment/properties/testCentre",
-          "description": "The test centre that the examiner is being deployed to",
-          "type": "object",
-          "properties": {
-            "centreId": {
-              "description": "Identifier for the test centre",
-              "type": "integer"
-            },
-            "centreName": {
-              "description": "Name of the test centre",
-              "type": "string",
-              "maxLength": 50
-            },
-            "costCode": {
-              "description": "Cost centre code for the test centre",
-              "type": "string",
-              "maxLength": 6
-            }
-          }
-        },
+        "testCentre": {"$ref": "#/definitions/testCentre"},
         "date": {
           "description": "Date of the deployment",
           "type": "string",
