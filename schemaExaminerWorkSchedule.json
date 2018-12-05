@@ -264,6 +264,7 @@
                 "vehicleGearbox": {
                   "description": "The type of vehicle gearbox, if captured",
                   "type": "string",
+                  "enum": ["Manual","Semi-Automatic","Automatic"],
                   "maxLength": 14
                 }
               }
@@ -276,6 +277,7 @@
                 "initiator": {
                   "description": "The reason for the previous test cancellation",
                   "type": "string",
+                  "enum": ["Act of nature","DSA"],
                   "maxLength": 15
                 }
               }
