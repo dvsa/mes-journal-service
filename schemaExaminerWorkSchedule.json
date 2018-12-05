@@ -39,6 +39,74 @@
           "type": "integer"
         }
       }
+    },
+    "name": {
+      "description": "Details of the individual's name",
+      "type": "object",
+      "required": [ "title", "firstName", "lastName" ],
+      "properties": {
+        "title": {
+          "description": "The individual's title",
+          "type": "string",
+          "maxLength": 7
+        },
+        "firstName": {
+          "description": "The individual's forename",
+          "type": "string",
+          "maxLength": 50
+        },
+        "secondName": {
+          "description": "The individual's second name",
+          "type": "string",
+          "maxLength": 50
+        },
+        "thirdName": {
+          "description": "The individual's third name",
+          "type": "string",
+          "maxLength": 50
+        },
+        "lastName": {
+          "description": "The individual's surname",
+          "type": "string",
+          "maxLength": 50
+        }
+      }
+    },
+    "address": {
+      "description": "Details of the address",
+      "type": "object",
+      "properties": {
+        "addressLine1": {
+          "description": "First line of address",
+          "type": "string",
+          "maxLength": 255
+        },
+        "addressLine2": {
+          "description": "Second line of address",
+          "type": "string",
+          "maxLength": 100
+        },
+        "addressLine3": {
+          "description": "Third line of address",
+          "type": "string",
+          "maxLength": 100
+        },
+        "addressLine4": {
+          "description": "Fourth line of address",
+          "type": "string",
+          "maxLength": 100
+        },
+        "addressLine5": {
+          "description": "Fifth line of address",
+          "type": "string",
+          "maxLength": 255
+        },
+        "postcode": {
+          "description": "The address postcode",
+          "type": "string",
+          "maxLength": 255
+        }
+      }
     }
   },
   "$schema": "http://json-schema.org/draft-07/schema#",
@@ -58,44 +126,8 @@
           "type": "string",
           "maxLength": 10
         },
-        "examinerName": {
-          "$id": "#/properties/examiner/properties/examinerName",
-          "description": "The examiner's name",
-          "type": "object",
-          "required": [ "title", "firstName", "lastName" ],
-          "properties": {
-            "title": {
-              "$id": "#/properties/examiner/properties/examinerName/properties/title",
-              "description": "The examiner's title",
-              "type": "string",
-              "maxLength": 7
-            },
-            "firstName": {
-              "$id": "#/properties/examiner/properties/examinerName/properties/firstName",
-              "description": "The examiner's first name",
-              "type": "string",
-              "maxLength": 50
-            },
-            "secondName": {
-              "$id": "#/properties/examiner/properties/examinerName/properties/secondName",
-              "description": "The examiner's second name",
-              "type": "string",
-              "maxLength": 50
-            },
-            "thirdName": {
-              "$id": "#/properties/examiner/properties/examinerName/properties/thirdName",
-              "description": "The examiner's third name",
-              "type": "string",
-              "maxLength": 50
-            },
-            "lastName": {
-              "$id": "#/properties/examiner/properties/examinerName/properties/lastName",
-              "description": "The examiner's surname",
-              "type": "string",
-              "maxLength": 50
-            }
-          }
-        }
+        "examinerName": {"$ref": "#/definitions/name"},
+        "permTestCentre": {"$ref": "#/definitions/testCentre"}
       }
     },
     "testSlot": {
@@ -128,28 +160,7 @@
                   "description": "The age of the test candidate on the day of the test",
                   "type": "integer"
                 },
-                "candidateName": {
-                  "$id": "#/properties/testSlot/properties/booking/properties/candidate/properties/candidateName",
-                  "description": "Details of the name of the candidate",
-                  "type": "object",
-                  "properties": {
-                    "title": {
-                      "description": "The candidate's title",
-                      "type": "string",
-                      "maxLength": 255
-                    },
-                    "firstName": {
-                      "description": "The candidate's first name",
-                      "type": "string",
-                      "maxLength": 50
-                    },
-                    "lastName": {
-                      "description": "The candidate's last name",
-                      "type": "string",
-                      "maxLength": 50
-                    }
-                  }
-                },
+                "candidateName": {"$ref": "#/definitions/name"},
                 "driverNumber": {
                   "description": "The candidate's driver number if any, typically (though not always) 16 characters if UK, or 8 digits if NI",
                   "type": "string",
@@ -160,28 +171,7 @@
                   "type": "string",
                   "maxLength": 255
                 },
-                "candidateAddress": {
-                  "$id": "#/properties/testSlot/properties/booking/properties/candidate/properties/candidateAddress",
-                  "description": "Details of the address of the candidate",
-                  "type": "object",
-                  "properties": {
-                    "addressLine1": {
-                      "description": "The candidate's first line of address",
-                      "type": "string",
-                      "maxLength": 255
-                    },
-                    "addressLine2": {
-                      "description": "The candidate's second line of address",
-                      "type": "string",
-                      "maxLength": 100
-                    },
-                    "addressLine3": {
-                      "description": "The candidate's third line of address",
-                      "type": "string",
-                      "maxLength": 100
-                    }
-                  }
-                },
+                "candidateAddress": {"$ref": "#/definitions/address"},
                 "primaryTelephone": {
                   "description": "The candidate's primary telephone number, if any (and consent to leave voicemail has been given)",
                   "type": "string",
@@ -304,43 +294,7 @@
                   "type": "string",
                   "maxLength": 100
                 },
-                "businessAddress": {
-                  "$id": "#/properties/testSlot/properties/booking/properties/business/properties/businessAddress",
-                  "description": "The business address, if any",
-                  "type": "object",
-                  "properties": {
-                    "addressLine1": {
-                      "description": "Address line 1 of the business",
-                      "type": "string",
-                      "maxLength": 255
-                    },
-                    "addressLine2": {
-                      "description": "Address line 2 of the business",
-                      "type": "string",
-                      "maxLength": 100
-                    },
-                    "addressLine3": {
-                      "description": "Address line 3 of the business",
-                      "type": "string",
-                      "maxLength": 100
-                    },
-                    "addressLine4": {
-                      "description": "Address line 4 of the business",
-                      "type": "string",
-                      "maxLength": 100
-                    },
-                    "addressLine5": {
-                      "description": "Address line 5 of the business",
-                      "type": "string",
-                      "maxLength": 255
-                    },
-                    "postcode": {
-                      "description": "Postcode of the business",
-                      "type": "string",
-                      "maxLength": 255
-                    }
-                  }
-                },
+                "businessAddress": {"$ref": "#/definitions/address"},
                 "telephone": {
                   "description": "The business telephone number, if any",
                   "type": "string",
