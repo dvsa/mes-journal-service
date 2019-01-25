@@ -23,6 +23,9 @@
     "jasmine-spec-reporter": "^4.2.1",
     "json-schema-to-typescript": "^6.1.0",
     "rimraf": "^2.6.2",
+    "serverless": "^1.36.3",
+    "serverless-dynamodb-local": "^0.2.35",
+    "serverless-offline": "^4.2.0",
     "ts-loader": "^5.2.2",
     "tslint": "^5.11.0",
     "tslint-config-airbnb": "^5.11.0",
@@ -40,6 +43,7 @@
     "postinstall": "npm run bootstrap",
     "prepush": "npm run security-scan && npm run lint && npm test",
     "security-scan": "git secrets --scan && git log -p | scanrepo",
+    "start": "sls offline start",
     "test": "npm run compile && jasmine"
   },
   "bugs": {
