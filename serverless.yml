@@ -6,12 +6,15 @@ provider:
   environment:
     JOURNAL_DDB_TABLE_NAME: journal
 
+package:
+  individually: true
+
 functions:
   getJournal:
-    handler: build/src/functions/getJournal/framework/handler.handler
+    handler: src/functions/getJournal/framework/handler.handler
     events:
       - http:
-          path: '/journals/{staffNumber}/personal'
+          path: 'journals/{staffNumber}/personal'
           method: get
 
 custom:
@@ -44,5 +47,6 @@ resources:
           WriteCapacityUnits: 5
 
 plugins:
+  - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline

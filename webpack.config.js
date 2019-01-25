@@ -1,18 +1,10 @@
-const fs = require('fs');
 const path = require('path');
+const slsw = require('serverless-webpack');
 
-const lambdaDir = path.join(__dirname, 'src', 'functions');
-const allEntries = fs.readdirSync(lambdaDir)
-    .reduce((entryObj, functionName) => {
-        entryObj[functionName] = `.${path.sep}${path.join('src', 'functions', functionName, 'framework', 'handler.ts')}`
-        return entryObj;
-    }, {});
-
-module.exports = env => ({
+module.exports = {
   target: 'node',
   mode: 'production',
-  entry: env && env.lambdas ?
-    env.lambdas.split(',').reduce((entryObj, fnName) => ({ ...entryObj, [fnName]: allEntries[fnName] }), {}) : allEntries,
+  entry: slsw.lib.entries,
   module: {
     rules: [
       {
@@ -30,4 +22,4 @@ module.exports = env => ({
     path: path.join(__dirname, 'build', 'bundle'),
     libraryTarget: 'commonjs'
   },
-});
+};
