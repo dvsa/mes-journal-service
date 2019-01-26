@@ -29,6 +29,8 @@ custom:
         sources:
           - table: journal
             sources: [./test-data/dynamo-seed-journal.json]
+  webpack:
+    webpackConfig: 'webpack-sls-offline.config.js'
 
 resources:
   Resources:
