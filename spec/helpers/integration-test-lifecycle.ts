@@ -21,6 +21,6 @@ export const startSlsOffline = (done: any) => {
 };
 
 export const stopSlsOffline = () => {
-  slsOfflineProcess.kill();
+  slsOfflineProcess.kill('SIGTERM');
   console.log('Serverless Offline stopped');
 };
