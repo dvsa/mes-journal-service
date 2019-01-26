@@ -19,6 +19,7 @@
     "@types/jasmine": "^2.8.9",
     "@types/node": "^10.12.0",
     "aws-lambda-test-utils": "^1.3.0",
+    "husky": "^1.3.1",
     "jasmine": "^3.3.1",
     "jasmine-spec-reporter": "^4.2.1",
     "json-schema-to-typescript": "^6.1.0",
@@ -45,8 +46,14 @@
     "postinstall": "npm run bootstrap",
     "prepush": "npm run security-scan && npm run lint && npm test",
     "security-scan": "git secrets --scan && git log -p | scanrepo",
-    "start": "sls offline start",
-    "test": "npm run compile && jasmine"
+    "start": "sls dynamodb install && sls offline start",
+    "test": "npm run compile && jasmine",
+    "test:integration": "npm run compile && jasmine build/spec/journal.spec.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test && npm run test:integration"
+    }
   },
   "bugs": {
     "url": "https://github.com/dvsa/mes-journal-service/issues"
