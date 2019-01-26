@@ -7,6 +7,7 @@ describe('integration test', () => {
     startSlsOffline((err: any) => {
       if (err) {
         console.error(err);
+        fail();
       }
       done();
     });
