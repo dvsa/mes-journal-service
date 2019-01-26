@@ -9,8 +9,8 @@ version_num=$(jq -r '.version' < package.json | cut -d . -f 1,2).$(date +%s)
 git_rev=$(git rev-parse --short HEAD)
 
 mkdir -p ${artefact_dir}
-for func_dir in src/functions/*; do
-  func_name=$(basename ${func_dir})
+functions=$(npx yaml2json serverless.yml | jq -r '.functions | keys | .[]')
+for func_name in ${functions}; do
   bundle_path="${bundle_dir}${func_name}.js"
   zip_filename="${func_name}-${version_num}-${git_rev}.zip"
   zip_path="${artefact_dir}${zip_filename}"

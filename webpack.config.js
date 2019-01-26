@@ -1,10 +1,18 @@
 const path = require('path');
-const slsw = require('serverless-webpack');
+const YAML = require('yamljs');
 
-module.exports = {
+const allEntries = Object.keys(YAML.load('serverless.yml').functions)
+  .reduce((entryObj, functionName) => {
+    entryObj[functionName] = `.${path.sep}${path.join('src', 'functions', functionName, 'framework', 'handler.ts')}`
+    return entryObj;
+  }, {});
+
+module.exports = env => ({
   target: 'node',
   mode: 'production',
-  entry: slsw.lib.entries,
+  entry: env && env.lambdas
+    ? env.lambdas.split(',').reduce((entryObj, fnName) => ({ ...entryObj, [fnName]: allEntries[fnName] }), {})
+    : allEntries,
   module: {
     rules: [
       {
@@ -22,4 +30,4 @@ module.exports = {
     path: path.join(__dirname, 'build', 'bundle'),
     libraryTarget: 'commonjs'
   },
-};
+});
