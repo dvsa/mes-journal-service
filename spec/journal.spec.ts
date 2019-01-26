@@ -1,6 +1,9 @@
+import * as supertest from 'supertest';
 import { startSlsOffline, stopSlsOffline } from './helpers/integration-test-lifecycle';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
+
+const request = supertest('http://localhost:3000');
 
 describe('integration test', () => {
   beforeAll((done) => {
@@ -16,7 +19,23 @@ describe('integration test', () => {
     stopSlsOffline();
   });
 
-  it('should run', () => {
-    expect(true).toBe(true);
+  it('should respond 200 for a journal that exists', (done) => {
+    request
+      .get('/journals/01234567/personal')
+      .expect(200)
+      .end((err, res) => {
+        if (err) throw err;
+        done();
+      });
+  });
+
+  it('should respond 404 for a journal that does not exist', (done) => {
+    request
+      .get('/journals/00000000/personal')
+      .expect(404)
+      .end((err, res) => {
+        if (err) throw err;
+        done();
+      });
   });
 });
