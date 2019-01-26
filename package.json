@@ -52,7 +52,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-push": "npm test && npm run test:integration"
+      "pre-push": "npm run security-scan && npm run lint && npm test && npm run test:integration"
     }
   },
   "bugs": {
