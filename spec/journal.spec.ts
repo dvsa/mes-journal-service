@@ -1,5 +1,6 @@
 import * as supertest from 'supertest';
 import { startSlsOffline, stopSlsOffline } from './helpers/integration-test-lifecycle';
+import { ExaminerWorkSchedule } from '../src/common/domain/Journal';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 
@@ -25,6 +26,10 @@ describe('integration test', () => {
       .expect(200)
       .end((err, res) => {
         if (err) throw err;
+        const response: ExaminerWorkSchedule = res.body;
+        expect(response.staffNumber).toBe('01234567');
+        // @ts-ignore
+        expect(response.testSlots.length).toBe(6);
         done();
       });
   });
