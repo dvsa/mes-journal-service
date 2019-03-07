@@ -1,6 +1,7 @@
 import { getJournal } from '../../framework/aws/DynamoJournalRepository';
 import { ExaminerWorkSchedule } from '../../../../common/domain/Journal';
 import * as moment from 'moment';
+import { decompressJournal } from './journal-decompressor';
 
 /**
  *  The class below is also found in MES-Mobile-App in bin/update-mock-data.ts
@@ -92,14 +93,13 @@ class DateUpdater {
 }
 
 export async function findJournal(staffNumber: string): Promise<ExaminerWorkSchedule | null> {
-  const journalWrapper = await getJournal(staffNumber);
-
-  if (!journalWrapper) {
+  const journalRecord = await getJournal(staffNumber);
+  if (!journalRecord) {
     return null;
   }
 
-  const journal: ExaminerWorkSchedule = journalWrapper.journal;
-  const updatedJournal = updateDates(journal);
+  const decompressedJournal: ExaminerWorkSchedule = decompressJournal(journalRecord.journal);
+  const updatedJournal = updateDates(decompressedJournal);
 
   return updatedJournal;
 }

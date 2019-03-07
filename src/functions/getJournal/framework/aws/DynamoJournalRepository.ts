@@ -1,6 +1,6 @@
 import { DynamoDB } from 'aws-sdk';
-import { JournalWrapper } from '../../domain/JournalWrapper';
 import * as logger from '../../../../common/application/utils/logger';
+import { JournalRecord } from '../../domain/JournalRecord';
 
 const createDynamoClient = () => {
   return process.env.IS_OFFLINE
@@ -11,7 +11,7 @@ const createDynamoClient = () => {
 const ddb = createDynamoClient();
 const tableName = getJournalTableName();
 
-export async function getJournal(staffNumber: string): Promise<JournalWrapper | null> {
+export async function getJournal(staffNumber: string): Promise<JournalRecord | null> {
   const journalGetResult = await ddb.get({
     TableName: tableName,
     Key: {
@@ -23,7 +23,7 @@ export async function getJournal(staffNumber: string): Promise<JournalWrapper | 
     return null;
   }
 
-  return journalGetResult.Item as JournalWrapper;
+  return journalGetResult.Item as JournalRecord;
 }
 
 function getJournalTableName(): string {
