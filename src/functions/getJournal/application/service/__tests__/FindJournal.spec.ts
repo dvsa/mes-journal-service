@@ -28,6 +28,18 @@ describe('FindJournal', () => {
       expect(result).toBeNull();
     });
 
+    it('should return null when the journal cannot be decompressed', async () => {
+      const compressedJournalFromRepo = { journal: 'abc' };
+      spyOn(DynamoJournalRepository, 'getJournal')
+        .and.returnValue(compressedJournalFromRepo);
+      moqDecompressJournal.reset();
+      moqDecompressJournal.setup(x => x(It.isAny())).throws(new Error('invalid'));
+
+      const result = await findJournal('00000000');
+
+      expect(result).toBeNull();
+    });
+
     it('should return the journal embedded in the wrapper', async () => {
       const compressedJournalFromRepo = { journal: 'abc' };
       spyOn(DynamoJournalRepository, 'getJournal')

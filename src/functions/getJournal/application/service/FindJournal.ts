@@ -98,9 +98,15 @@ export async function findJournal(staffNumber: string): Promise<ExaminerWorkSche
     return null;
   }
 
-  const decompressedJournal: ExaminerWorkSchedule = decompressJournal(journalRecord.journal);
-  const updatedJournal = updateDates(decompressedJournal);
+  let decompressedJournal: ExaminerWorkSchedule;
+  try {
+    decompressedJournal = decompressJournal(journalRecord.journal);
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
 
+  const updatedJournal = updateDates(decompressedJournal);
   return updatedJournal;
 }
 
