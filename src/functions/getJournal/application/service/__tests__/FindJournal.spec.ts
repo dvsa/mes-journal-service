@@ -10,7 +10,7 @@ const dummyWorkSchedule = Mock.ofType<ExaminerWorkSchedule>();
 dummyWorkSchedule.setup((x: any) => x.staffNumber).returns(() => '00000000');
 dummyWorkSchedule.setup((x: any) => x.then).returns(() => null);
 
-fdescribe('FindJournal', () => {
+describe('FindJournal', () => {
   beforeEach(() => {
     moqDecompressJournal.reset();
 
