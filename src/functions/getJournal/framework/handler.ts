@@ -11,8 +11,8 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     return createResponse('No staffNumber provided', HttpStatus.BAD_REQUEST);
   }
 
-  const employeeId = getEmployeeIdFromToken(event.headers.Authorization);
   if (process.env.EMPLOYEE_ID_VERIFICATION_DISABLED !== 'true') {
+    const employeeId = getEmployeeIdFromToken(event.headers.Authorization);
     if (employeeId === null) {
       return createResponse('Invalid authorisation token', HttpStatus.UNAUTHORIZED);
     }

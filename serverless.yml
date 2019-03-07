@@ -49,6 +49,7 @@ resources:
           WriteCapacityUnits: 5
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline

@@ -8,6 +8,7 @@ const request = supertest('http://localhost:3000');
 
 describe('integration test', () => {
   beforeAll((done) => {
+    process.env.NODE_ENV = 'local';
     startSlsOffline((err: any) => {
       if (err) {
         console.error(err);
