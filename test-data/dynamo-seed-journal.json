@@ -24,7 +24,6 @@
               "welshTest": false
             },
             "candidate": {
-              "age": 17,
               "candidateAddress": {
                 "addressLine1": "1 Station Street",
                 "addressLine2": "Someplace",
@@ -38,15 +37,12 @@
                 "title": "Miss"
               },
               "driverNumber": "PEARS015220A99HC",
-              "gender": "Female",
               "mobileTelephone": "07654 123456",
               "primaryTelephone": "01234 567890",
               "secondaryTelephone": "04321 098765"
             },
             "previousCancellation": [
-              {
-                "initiator": "Act of nature"
-              }
+              "Act of nature"
             ]
           },
           "slotDetail": {
@@ -75,7 +71,6 @@
               "welshTest": false
             },
             "candidate": {
-              "age": 56,
               "candidateAddress": {
                 "addressLine1": "My House",
                 "addressLine2": "Someplace",
@@ -89,16 +84,11 @@
                 "title": "Mrs"
               },
               "driverNumber": "DOEXX625220A99HC",
-              "gender": "Female",
               "mobileTelephone": "07654 123456"
             },
             "previousCancellation": [
-              {
-                "initiator": "DSA"
-              },
-              {
-                "initiator": "Act of nature"
-              }
+              "DSA",
+              "Act of nature"
             ]
           },
           "slotDetail": {
@@ -132,7 +122,6 @@
               "welshTest": false
             },
             "candidate": {
-              "age": 30,
               "candidateAddress": {
                 "addressLine1": "999 Letsby Avenue",
                 "addressLine2": "Someplace",
@@ -146,7 +135,6 @@
                 "title": "Miss"
               },
               "driverNumber": "SHAWX885220A99HC",
-              "gender": "Female",
               "mobileTelephone": "07654 123456"
             }
           },
@@ -182,7 +170,6 @@
               "welshTest": false
             },
             "candidate": {
-              "age": 38,
               "candidateAddress": {
                 "addressLine1": "1 Station Street",
                 "addressLine2": "Someplace",
@@ -197,7 +184,6 @@
                 "title": "Mr"
               },
               "driverNumber": "CAMPB805220A89HC",
-              "gender": "Male",
               "mobileTelephone": "07654 123456",
               "primaryTelephone": "01234 567890"
             }
@@ -234,7 +220,6 @@
               "welshTest": false
             },
             "candidate": {
-              "age": 27,
               "candidateAddress": {
                 "addressLine1": "The Gables Cottage",
                 "addressLine2": "Home Farm",
@@ -250,7 +235,6 @@
                 "title": "Mr"
               },
               "driverNumber": "BROWN915220A99HC",
-              "gender": "Male",
               "mobileTelephone": "07654 123456",
               "primaryTelephone": "01234 567890",
               "secondaryTelephone": "04321 098765"
@@ -284,7 +268,6 @@
               "welshTest": true
             },
             "candidate": {
-              "age": 81,
               "candidateAddress": {
                 "addressLine1": "1 Hangar Lane",
                 "addressLine2": "Someplace",
@@ -298,7 +281,6 @@
                 "title": "Captain"
               },
               "driverNumber": "SMYTH375220A99HC",
-              "gender": "Male",
               "primaryTelephone": "01234 567890"
             }
           },
