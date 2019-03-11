@@ -71,6 +71,10 @@
       "lcov",
       "text-summary"
     ],
+    "exclude": [
+      "**/__mocks__/*",
+      "**/__tests__/*"
+    ],
     "exclude-after-remap": false,
     "sourceMap": true,
     "produce-source-map": true,
