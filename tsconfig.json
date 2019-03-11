@@ -22,5 +22,4 @@
     "exclude": [
       "node_modules"
     ],
-    "all": true
   }
