@@ -19,3 +19,4 @@ src/common/domain/Journal.d.ts
 artefacts
 .dynamodb/
 .serverless/
+.nyc_output/
