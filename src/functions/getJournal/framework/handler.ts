@@ -25,7 +25,7 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
 
   try {
     logger.info(`Finding journal for staff number ${staffNumber}`);
-    const journal = await findJournal(staffNumber, 0);
+    const journal = await findJournal(staffNumber, getIfModifiedSinceHeaderAsTimestamp(event.headers));
     if (journal === null) {
       return createResponse({}, HttpStatus.NOT_MODIFIED);
     }
@@ -92,3 +92,9 @@ function getEmployeeIdStringProperty(employeeId: any): string | null {
   }
   return employeeId;
 }
+
+const getIfModifiedSinceHeaderAsTimestamp = (headers: { [headerName: string]: string }): number | null => {
+  const ifModfiedSinceHeader = headers['If-Modified-Since'];
+  const parsedIfModifiedSinceHeader = Date.parse(ifModfiedSinceHeader);
+  return Number.isNaN(parsedIfModifiedSinceHeader) ? null : parsedIfModifiedSinceHeader;
+};
