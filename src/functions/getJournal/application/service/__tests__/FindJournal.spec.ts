@@ -3,6 +3,8 @@ import { findJournal } from '../FindJournal';
 import * as journalDecompressor from '../journal-decompressor';
 import { Mock, It, Times } from 'typemoq';
 import { ExaminerWorkSchedule } from '../../../../../common/domain/Journal';
+import { JournalNotFoundError } from '../../../domain/errors/journal-not-found-error';
+import { JournalDecompressionError } from '../../../domain/errors/journal-decompression-error';
 
 const moqDecompressJournal = Mock.ofInstance(journalDecompressor.decompressJournal);
 
@@ -20,24 +22,32 @@ describe('FindJournal', () => {
   });
 
   describe('findJournal', () => {
-    it('should return null when the repo cant get the journal', async () => {
+    it('should throw JournalNotFoundError when the repo cant get the journal', async () => {
       spyOn(DynamoJournalRepository, 'getJournal').and.returnValue(null);
 
-      const result = await findJournal('00000000');
-
-      expect(result).toBeNull();
+      try {
+        await findJournal('00000000', null);
+      } catch (err) {
+        expect(err instanceof JournalNotFoundError).toBe(true);
+        return;
+      }
+      fail();
     });
 
-    it('should return null when the journal cannot be decompressed', async () => {
+    it('should throw a JournalDecompressionError when the journal cannot be decompressed', async () => {
       const compressedJournalFromRepo = { journal: 'abc' };
       spyOn(DynamoJournalRepository, 'getJournal')
         .and.returnValue(compressedJournalFromRepo);
       moqDecompressJournal.reset();
       moqDecompressJournal.setup(x => x(It.isAny())).throws(new Error('invalid'));
 
-      const result = await findJournal('00000000');
-
-      expect(result).toBeNull();
+      try {
+        await findJournal('00000000', null);
+      } catch (err) {
+        expect(err instanceof JournalDecompressionError).toBeTruthy();
+        return;
+      }
+      fail();
     });
 
     it('should return the journal embedded in the wrapper', async () => {
@@ -45,11 +55,23 @@ describe('FindJournal', () => {
       spyOn(DynamoJournalRepository, 'getJournal')
         .and.returnValue(compressedJournalFromRepo);
 
-      const result = await findJournal('00000000');
+      const result = await findJournal('00000000', null);
 
       moqDecompressJournal.verify(x => x(It.isValue(Buffer.from('abc'))), Times.once());
       // @ts-ignore
       expect(result.staffNumber).toBe('00000000');
+    });
+
+    describe('update time checking', () => {
+      it('should return null when the journal found has a lastUpdatedAt leq the last updated timestamp', async () => {
+        const compressedJournalFromRepo = { journal: Buffer.from('abc'), lastUpdatedAt: 123 };
+        spyOn(DynamoJournalRepository, 'getJournal')
+          .and.returnValue(compressedJournalFromRepo);
+
+        const result = await findJournal('00000000', 123);
+
+        expect(result).toBeNull();
+      });
     });
   });
 });

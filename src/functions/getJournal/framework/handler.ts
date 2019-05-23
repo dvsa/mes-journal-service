@@ -4,6 +4,7 @@ import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import * as logger from '../../../common/application/utils/logger';
 import { findJournal } from '../application/service/FindJournal';
 import * as jwtDecode from 'jwt-decode';
+import { JournalNotFoundError } from '../domain/errors/journal-not-found-error';
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   const staffNumber = getStaffNumber(event.pathParameters);
@@ -24,12 +25,15 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
 
   try {
     logger.info(`Finding journal for staff number ${staffNumber}`);
-    const journal = await findJournal(staffNumber);
+    const journal = await findJournal(staffNumber, 0);
     if (journal === null) {
-      return createResponse({}, HttpStatus.NOT_FOUND);
+      return createResponse({}, HttpStatus.NOT_MODIFIED);
     }
     return createResponse(journal);
   } catch (err) {
+    if (err instanceof JournalNotFoundError) {
+      return createResponse({}, HttpStatus.NOT_FOUND);
+    }
     logger.error(err);
     return createResponse('Unable to retrieve journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
