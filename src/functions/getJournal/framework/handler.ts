@@ -94,7 +94,12 @@ function getEmployeeIdStringProperty(employeeId: any): string | null {
 }
 
 const getIfModifiedSinceHeaderAsTimestamp = (headers: { [headerName: string]: string }): number | null => {
-  const ifModfiedSinceHeader = headers['If-Modified-Since'];
-  const parsedIfModifiedSinceHeader = Date.parse(ifModfiedSinceHeader);
-  return Number.isNaN(parsedIfModifiedSinceHeader) ? null : parsedIfModifiedSinceHeader;
+  for (const headerName of Object.keys(headers)) {
+    if (headerName.toLowerCase() === 'if-modified-since') {
+      const ifModfiedSinceHeaderValue = headers[headerName];
+      const parsedIfModifiedSinceHeader = Date.parse(ifModfiedSinceHeaderValue);
+      return Number.isNaN(parsedIfModifiedSinceHeader) ? null : parsedIfModifiedSinceHeader;
+    }
+  }
+  return null;
 };

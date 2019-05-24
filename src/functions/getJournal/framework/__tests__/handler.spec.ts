@@ -217,6 +217,20 @@ describe('getJournal handler', () => {
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
       moqFindJournal.verify(x => x(It.isValue('12345678'), It.isValue(1558624157000)), Times.once());
     });
+    it('should parse If-Modified-Since header in any casing', async () => {
+      process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = 'true';
+      dummyApigwEvent.headers = {
+        'Content-Type': 'application/json',
+        Authorization: tokens.employeeId_01234567,
+        'If-MoDiFiEd-SiNce': 'Thu, 23 May 2019 15:09:17 GMT',
+      };
+      moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
+      createResponseSpy.and.returnValue({ statusCode: 200 });
+
+      await handler(dummyApigwEvent, dummyContext);
+
+      moqFindJournal.verify(x => x(It.isValue('12345678'), It.isValue(1558624157000)), Times.once());
+    });
     it('should not error on a non-parsable If-Modified-Since header and pass instead of a timestamp', async () => {
       process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = 'true';
       dummyApigwEvent.headers = {
