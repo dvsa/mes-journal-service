@@ -27,10 +27,10 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     logger.info(`Finding journal for staff number ${staffNumber}`);
     const journal = await findJournal(staffNumber, getIfModifiedSinceHeaderAsTimestamp(event.headers));
     if (journal === null) {
-      logCustomMetric('JournalUnchanged', 'Number of unchanged responses sent (HTTP 304)');
+      logger.customMetric('JournalUnchanged', 'Number of unchanged responses sent (HTTP 304)');
       return createResponse({}, HttpStatus.NOT_MODIFIED);
     }
-    logCustomMetric('JournalChanged', 'Number of populated responses sent (HTTP 200)');
+    logger.customMetric('JournalChanged', 'Number of populated responses sent (HTTP 200)');
     return createResponse(journal);
   } catch (err) {
     if (err instanceof JournalNotFoundError) {
@@ -105,11 +105,3 @@ const getIfModifiedSinceHeaderAsTimestamp = (headers: { [headerName: string]: st
   }
   return null;
 };
-
-function logCustomMetric(name: string, description: string): void {
-  console.log(JSON.stringify({
-    name,
-    description,
-    service: 'journals-poller',
-  }));
-}

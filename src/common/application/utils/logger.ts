@@ -9,3 +9,11 @@ export function warn(msg: string): void {
 export function error(msg: string): void {
   console.error(`ERROR: ${msg}`);
 }
+
+export function customMetric(name: string, description: string): void {
+  console.log(JSON.stringify({
+    name,
+    description,
+    service: 'journals-poller',
+  }));
+}
