@@ -14,6 +14,6 @@ export function customMetric(name: string, description: string): void {
   console.log(JSON.stringify({
     name,
     description,
-    service: 'journals-poller',
+    service: 'journal-service',
   }));
 }
