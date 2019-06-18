@@ -8,7 +8,7 @@ export default {
           application: {
             applicationId: 1234567,
             bookingSequence: 3,
-            checkDigits: 1,
+            checkDigit: 1,
             entitlementCheck: false,
             extendedTest: false,
             progressiveAccess: false,
