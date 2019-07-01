@@ -1,6 +1,6 @@
 import * as supertest from 'supertest';
 import { startSlsOffline, stopSlsOffline } from './helpers/integration-test-lifecycle';
-import { ExaminerWorkSchedule } from '../src/common/domain/Journal';
+import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema/Journal';
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 30000;
 

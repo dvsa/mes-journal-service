@@ -1,4 +1,4 @@
-import { ExaminerWorkSchedule } from '../../../../common/domain/Journal';
+import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema/Journal';
 import { gunzipSync } from 'zlib';
 
 export const decompressJournal = (compressedJournal: Buffer): ExaminerWorkSchedule => {

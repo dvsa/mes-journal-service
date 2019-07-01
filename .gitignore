@@ -15,7 +15,6 @@ npm-debug.log
 *.zip
 dist
 coverage
-src/common/domain/Journal.d.ts
 artefacts
 .dynamodb/
 .serverless/

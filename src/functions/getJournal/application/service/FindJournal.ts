@@ -1,5 +1,5 @@
 import { getJournal } from '../../framework/aws/DynamoJournalRepository';
-import { ExaminerWorkSchedule } from '../../../../common/domain/Journal';
+import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema/Journal';
 import { decompressJournal } from './journal-decompressor';
 import * as logger from '../../../../common/application/utils/logger';
 import { JournalNotFoundError } from '../../domain/errors/journal-not-found-error';
