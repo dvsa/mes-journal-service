@@ -36,7 +36,6 @@ describe('getJournal handler', () => {
     dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345678' };
     dummyContext = lambdaTestUtils.mockContextCreator(() => null);
     process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = undefined;
-    process.env.EMPLOYEE_ID_EXT_KEY = 'extn.employeeId';
     spyOn(FindJournal, 'findJournal').and.callFake(moqFindJournal.object);
   });
 
