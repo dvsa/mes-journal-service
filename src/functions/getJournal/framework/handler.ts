@@ -14,7 +14,7 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   if (process.env.EMPLOYEE_ID_VERIFICATION_DISABLED !== 'true') {
     const employeeId = getEmployeeIdFromRequestContext(event.requestContext);
     if (employeeId === null) {
-      return createResponse('Invalid authorisation token', HttpStatus.UNAUTHORIZED);
+      return createResponse('No staff number found in request context', HttpStatus.UNAUTHORIZED);
     }
     if (employeeId !== staffNumber) {
       logger.warn(`Invalid staff number (${staffNumber}) requested by employeeId ${employeeId}`);

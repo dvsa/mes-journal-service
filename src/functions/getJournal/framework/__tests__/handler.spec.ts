@@ -126,7 +126,7 @@ describe('getJournal handler', () => {
         const resp = await handler(dummyApigwEvent, dummyContext);
 
         expect(resp.statusCode).toBe(401);
-        expect(createResponse.default).toHaveBeenCalledWith('Invalid authorisation token', 401);
+        expect(createResponse.default).toHaveBeenCalledWith('No staff number found in request context', 401);
       });
     });
   });
