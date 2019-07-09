@@ -114,12 +114,13 @@ describe('getJournal handler', () => {
     });
   });
 
-  describe('obtaining employee ID from token with array or non-array extension attributes', () => {
-    it('should get the employee ID from when the property is an array', async () => {
-      dummyApigwEvent.headers = {
-        'Content-Type': 'application/json',
-        Authorization: tokens.employeeId_12345678,
+  describe('obtaining employee ID from request context', () => {
+    it('should obtain a the employee ID from the request context, not the JWT', async () => {
+      dummyApigwEvent.requestContext.authorizer = {
+        staffNumber: '999999',
       };
+      // @ts-ignore
+      dummyApigwEvent.pathParameters.staffNumber = '999999';
       createResponseSpy.and.returnValue({ statusCode: 200 });
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
 
@@ -127,20 +128,7 @@ describe('getJournal handler', () => {
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
-    });
-    it('should get the employee ID from when the property is a string', async () => {
-      dummyApigwEvent.headers = {
-        'Content-Type': 'application/json',
-        Authorization: tokens.employeeId_notArray,
-      };
-      process.env.EMPLOYEE_ID_EXT_KEY = 'employeeid';
-      createResponseSpy.and.returnValue({ statusCode: 200 });
-      moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
-
-      const resp = await handler(dummyApigwEvent, dummyContext);
-
-      expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      moqFindJournal.verify(x => x(It.isValue('999999'), It.isAny()), Times.once());
     });
   });
 
