@@ -33,6 +33,7 @@ describe('getJournal handler', () => {
         Authorization: tokens.employeeId_12345678,
       },
     });
+    dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345678' };
     dummyContext = lambdaTestUtils.mockContextCreator(() => null);
     process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = undefined;
     process.env.EMPLOYEE_ID_EXT_KEY = 'extn.employeeId';
@@ -99,28 +100,12 @@ describe('getJournal handler', () => {
     });
   });
 
-  describe('given there is no employeeId in the authorisation token', () => {
-    it('should indicate a bad request', async () => {
-      dummyApigwEvent.headers = {
-        'Content-Type': 'application/json',
-        Authorization: tokens.employeeId_null,
-      };
-      createResponseSpy.and.returnValue({ statusCode: 401 });
-
-      const resp = await handler(dummyApigwEvent, dummyContext);
-
-      expect(resp.statusCode).toBe(401);
-      expect(createResponse.default).toHaveBeenCalledWith('Invalid authorisation token', 401);
-    });
-  });
-
   describe('obtaining employee ID from request context', () => {
     it('should obtain a the employee ID from the request context, not the JWT', async () => {
       dummyApigwEvent.requestContext.authorizer = {
         staffNumber: '999999',
       };
-      // @ts-ignore
-      dummyApigwEvent.pathParameters.staffNumber = '999999';
+      dummyApigwEvent.pathParameters = { staffNumber: '999999' };
       createResponseSpy.and.returnValue({ statusCode: 200 });
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
 
@@ -130,6 +115,21 @@ describe('getJournal handler', () => {
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
       moqFindJournal.verify(x => x(It.isValue('999999'), It.isAny()), Times.once());
     });
+    describe('given there is no employeeId in the request context', () => {
+      it('should indicate a bad request', async () => {
+        dummyApigwEvent.headers = {
+          'Content-Type': 'application/json',
+          Authorization: tokens.employeeId_12345678,
+        };
+        dummyApigwEvent.requestContext.authorizer = null;
+        createResponseSpy.and.returnValue({ statusCode: 401 });
+
+        const resp = await handler(dummyApigwEvent, dummyContext);
+
+        expect(resp.statusCode).toBe(401);
+        expect(createResponse.default).toHaveBeenCalledWith('Invalid authorisation token', 401);
+      });
+    });
   });
 
   describe('given the staff number does not match the employeeId in the authorisation token', () => {
@@ -138,6 +138,7 @@ describe('getJournal handler', () => {
         'Content-Type': 'application/json',
         Authorization: tokens.employeeId_01234567,
       };
+      dummyApigwEvent.requestContext.authorizer = { staffNumber: '999999' };
       createResponseSpy.and.returnValue({ statusCode: 403 });
 
       const resp = await handler(dummyApigwEvent, dummyContext);
