@@ -1,4 +1,4 @@
-import { ApplicationReference } from '@dvsa/mes-test-schema/categories/B';
+import { ApplicationReference } from '@dvsa/mes-test-schema/categories/common';
 import { ExaminerWorkSchedule, TestSlot } from '@dvsa/mes-journal-schema';
 
 export const correctStaffNumber = '12345678';

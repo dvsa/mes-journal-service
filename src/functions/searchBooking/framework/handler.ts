@@ -4,7 +4,7 @@ import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import { findJournal } from '../../../common/application/journal/FindJournal';
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
-import { ApplicationReference } from '@dvsa/mes-test-schema/categories/B';
+import { ApplicationReference } from '@dvsa/mes-test-schema/categories/common';
 import { gzipSync } from 'zlib';
 import * as joi from '@hapi/joi';
 import { get } from 'lodash';
