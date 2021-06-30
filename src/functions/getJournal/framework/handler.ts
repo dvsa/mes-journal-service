@@ -5,8 +5,15 @@ import * as logger from '../../../common/application/utils/logger';
 import { findJournal } from '../../../common/application/journal/FindJournal';
 import { JournalNotFoundError } from '../../../common/domain/errors/journal-not-found-error';
 import { getEmployeeIdFromRequestContext } from '../../../common/application/journal/employee-id-from-authorizer';
+import axios, { AxiosError } from 'axios';
+// import * as https from 'https';
+import { get } from 'https';
+
+const axiosInstance = axios.create({
+});
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
+  await sendErrorNotification('Error Notification');
   const staffNumber = getStaffNumber(event.pathParameters);
   if (staffNumber === null) {
     return createResponse('No staffNumber provided', HttpStatus.BAD_REQUEST);
@@ -60,4 +67,56 @@ const getIfModifiedSinceHeaderAsTimestamp = (headers: { [headerName: string]: st
     }
   }
   return null;
+};
+
+/** KR Test Notification function
+ **/
+
+export const sendErrorNotification = async (errorMessage: string | null) => {
+  try {
+    logger.info(`Calling sendErrorNotification `);
+    const url = `https://restful-booker.herokuapp.com/booking/10`;
+    logger.info(`calling ${url}`);
+    const result1 = await get(url);
+    console.log('result' , result1);
+    return result1;
+  } catch (e) {
+    const ex = mapHTTPErrorToDomainError(e);
+    const errorMessage = `Failed to send error notification for app `;
+    logger.error(errorMessage + e);
+    return ex;
+  }
+};
+
+export const sendErrorNotificationold = async (errorMessage: string | null) => {
+  logger.info(`Calling sendErrorNotification `);
+  const url = `https://restful-booker.herokuapp.com/booking/10`;
+  logger.info(`calling ${url}`);
+
+  return new Promise(async (resolve, reject) => {
+    const result = axiosInstance.get(url);
+    console.log('result' , await result);
+    result.then((response) => {
+      logger.info('Notification successfully sent');
+      resolve();
+    }).catch((err) => {
+      const ex = mapHTTPErrorToDomainError(err);
+      const errorMessage = `Failed to send error notification for app `;
+      logger.error(errorMessage + err);
+      reject(ex);
+    });
+  });
+};
+
+const mapHTTPErrorToDomainError = (err: AxiosError): Error => {
+  const { request, response } = err;
+  if (response) {
+    return new Error(JSON.stringify(response.data));
+  }
+  // Request was made, but no response received
+  if (request) {
+    return new Error(`no response received ${err.message}`);
+  }
+  // Failed to setup the request
+  return new Error(err.message);
 };
