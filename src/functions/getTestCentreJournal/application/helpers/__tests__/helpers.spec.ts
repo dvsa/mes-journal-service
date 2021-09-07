@@ -47,6 +47,11 @@ describe('constructResponseArray', () => {
                 booking: { application: { testCategory: TestCategory.B } },
               },
               {
+                slotDetail: { start: `${today}T14:00:00` },
+                testCentre: { centreId: 1234, centreName: 'Swansea' },
+                booking: { application: { testCategory: TestCategory.ADI2 } },
+              },
+              {
                 slotDetail: { start: `${tomorrow}T12:00:00` },
                 testCentre: { centreId: 1289, centreName: 'Neath' },
                 booking: { application: { testCategory: TestCategory.C } },

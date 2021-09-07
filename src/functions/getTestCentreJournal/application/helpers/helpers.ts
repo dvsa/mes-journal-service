@@ -71,7 +71,6 @@ const filterByTestCentreAndDate = <T>(testCentreDetail: TestCentreDetail, info: 
       section.testCentre &&
       isAnyOf(section.testCentre.centreId, testCentreDetail.testCentreIDs) &&
       inNext2Days(section) &&
-      isNonADI2TestSlot(section) &&
       testCentres.push({ name: section.testCentre.centreName, id: section.testCentre.centreId } as TestCentre)
     );
   });
