@@ -6,8 +6,8 @@ import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
 import { ApplicationReference } from '@dvsa/mes-test-schema/categories/common';
 import { gzipSync } from 'zlib';
-import * as joi from '@hapi/joi';
 import { get } from 'lodash';
+import joi = require('joi');
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   if (!event.queryStringParameters) {
@@ -31,13 +31,11 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     appRefValidator: joi.number().max(1000000000000).optional(),
   });
 
-  const validationResult =
-    joi.validate(
-      {
-        staffNumberValidator: staffNumber,
-        appRefValidator: applicationReference,
-      },
-      parametersSchema);
+  const validationResult = parametersSchema.validate(
+    {
+      staffNumberValidator: staffNumber,
+      appRefValidator: applicationReference,
+    });
 
   if (validationResult.error) {
     return createResponse(validationResult.error, HttpStatus.BAD_REQUEST);
