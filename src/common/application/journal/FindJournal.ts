@@ -27,7 +27,7 @@ export async function findJournal(
   try {
     return decompressJournal(journalRecord.journal);
   } catch (error) {
-    logger.error(error);
+    logger.error(error as string);
     throw new JournalDecompressionError();
   }
 }
@@ -48,7 +48,7 @@ export async function findJournalWithResponse(
   try {
     return decompressJournal(journalRecord.journal);
   } catch (error) {
-    logger.error(error);
+    logger.error(error as string);
     // return journal decompression error instead of throwing which would stop execution
     return { error: 'Journal decompression error' };
   }

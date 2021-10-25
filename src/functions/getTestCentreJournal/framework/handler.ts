@@ -46,7 +46,7 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     if (err instanceof TestCentreNotFoundError) {
       return createResponse(`User does not have a corresponding row in test centre table`, HttpStatus.NOT_FOUND);
     }
-    logger.error(err);
+    logger.error(err as string);
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

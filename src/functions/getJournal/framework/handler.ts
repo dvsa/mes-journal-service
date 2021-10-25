@@ -1,4 +1,4 @@
-import { APIGatewayProxyEvent, Context, APIGatewayEventRequestContext } from 'aws-lambda';
+import { APIGatewayProxyEvent, Context } from 'aws-lambda';
 import createResponse from '../../../common/application/utils/createResponse';
 import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import * as logger from '../../../common/application/utils/logger';
