@@ -38,7 +38,7 @@ const journalNotModifiedSince = (journalRecord: JournalRecord, modifiedSinceTime
 
 export async function findJournalWithResponse(
   staffNumber: string,
-): Promise<ExaminerWorkSchedule | { error: string; }> {
+): Promise<ExaminerWorkSchedule | { error: string }> {
   const journalRecord = await getJournal(staffNumber);
   if (!journalRecord) {
     // return journal not found error instead of throwing which would stop execution

@@ -38,7 +38,7 @@ const assignJournalToStaff = (
 
   const journal = (journals as ExaminerWorkSchedule[])
     .find((journal: ExaminerWorkSchedule | null) =>
-            get(journal, 'examiner.staffNumber') === examiner.staffNumber);
+      get(journal, 'examiner.staffNumber') === examiner.staffNumber);
 
   if (!journal) {
     return null;
@@ -95,5 +95,5 @@ export const isNonADI2TestSlot = (section: TestSlot): boolean => {
 
 const deriveError = (journals: ExaminerWorkScheduleOrEmpty[], index: number): string | undefined => {
   // returning undefined when no error so it removes the key
-  return ('error' in journals[index]) ? (journals[index] as { error: string; }).error : undefined;
+  return ('error' in journals[index]) ? (journals[index] as { error: string }).error : undefined;
 };
