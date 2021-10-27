@@ -24,7 +24,7 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
 
   const applicationReference: string = event.queryStringParameters.appRef;
 
-  const staffNumber = event.pathParameters['staffNumber'];
+  const staffNumber = event.pathParameters['staffNumber'] as string;
 
   const parametersSchema = joi.object().keys({
     staffNumberValidator: joi.number().max(100000000).optional(),

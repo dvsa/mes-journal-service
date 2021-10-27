@@ -2,7 +2,7 @@ service: mes-journal-service
 
 provider:
   name: aws
-  runtime: nodejs14
+  runtime: nodejs14.x
   environment:
     JOURNALS_DDB_TABLE_NAME: journals
     TEST_CENTRE_DDB_TABLE_NAME: test-centres

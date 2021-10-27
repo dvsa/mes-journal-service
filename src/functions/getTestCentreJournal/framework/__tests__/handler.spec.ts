@@ -52,7 +52,8 @@ describe('getTestCentreJournal handler', () => {
 
   describe('given the FindTestCentreJournal returns a test centre row', () => {
     it('should return a successful response with the test centre detail', async () => {
-      spyOn(FindTestCentreJournal, 'findJournalWithResponse').and.returnValue({} as ExaminerWorkSchedule);
+      spyOn(FindTestCentreJournal, 'findJournalWithResponse')
+        .and.returnValue(Promise.resolve({} as ExaminerWorkSchedule));
       moqFindTestCentreDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve(fakeTestCentre));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
