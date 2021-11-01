@@ -7,7 +7,7 @@ import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain
 import { ApplicationReference } from '@dvsa/mes-test-schema/categories/common';
 import { gzipSync } from 'zlib';
 import { get } from 'lodash';
-import joi = require('joi');
+import * as joi from 'joi';
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   if (!event.queryStringParameters) {
