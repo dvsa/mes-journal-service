@@ -3,9 +3,10 @@ service: mes-journal-service
 provider:
   name: aws
   runtime: nodejs14.x
+  lambdaHashingVersion: 20201221
   environment:
     JOURNALS_DDB_TABLE_NAME: journals
-    TEST_CENTRE_DDB_TABLE_NAME: test-centres
+    TEST_CENTRE_DDB_TABLE_NAME: testCentres
 
 package:
   individually: true
@@ -45,7 +46,7 @@ custom:
         sources:
           - table: journals
             sources: [./test-data/dynamo-seed-journal.json]
-          - table: test-centres
+          - table: testCentres
             sources: [./test-data/dynamo-seed-test-centre-journal.json]
   webpack:
     webpackConfig: 'webpack-sls-offline.config.js'
@@ -65,10 +66,10 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
-    test-centres:
+    testCentres:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${env:TEST_CENTRE_DDB_TABLE_NAME, 'test-centres'}
+        TableName: ${self:provider.environment.TEST_CENTRE_DDB_TABLE_NAME}
         AttributeDefinitions:
           - AttributeName: staffNumber
             AttributeType: S
