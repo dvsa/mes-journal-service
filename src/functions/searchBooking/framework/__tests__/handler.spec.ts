@@ -15,7 +15,7 @@ import {
 } from './handler.spec.data';
 const lambdaTestUtils = require('aws-lambda-test-utils');
 
-describe('getJournal handler', () => {
+describe('searchBooking handler', () => {
   let dummyApigwEvent: APIGatewayEvent;
   let dummyContext: Context;
   let createResponseSpy: jasmine.Spy;
