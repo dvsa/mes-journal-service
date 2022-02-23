@@ -11,7 +11,7 @@ import { TestCentreNotFoundError } from '../../../common/domain/errors/test-cent
 import { getEmployeeIdFromRequestContext } from '../../../common/application/journal/employee-id-from-authorizer';
 import { constructResponseArray } from '../application/helpers/helpers';
 
-export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string };
+export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string; };
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   const staffNumber: string | null = getEmployeeIdFromRequestContext(event.requestContext);
@@ -44,9 +44,9 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     return createResponse(testCentreDetail);
   } catch (err) {
     if (err instanceof TestCentreNotFoundError) {
-      return createResponse('User does not have a corresponding row in test centre table', HttpStatus.NOT_FOUND);
+      return createResponse(`User does not have a corresponding row in test centre table`, HttpStatus.NOT_FOUND);
     }
-    logger.error(err as string);
+    logger.error(err);
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }

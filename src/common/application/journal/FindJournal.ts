@@ -27,7 +27,7 @@ export async function findJournal(
   try {
     return decompressJournal(journalRecord.journal);
   } catch (error) {
-    logger.error(error as string);
+    logger.error(error);
     throw new JournalDecompressionError();
   }
 }
@@ -38,7 +38,7 @@ const journalNotModifiedSince = (journalRecord: JournalRecord, modifiedSinceTime
 
 export async function findJournalWithResponse(
   staffNumber: string,
-): Promise<ExaminerWorkSchedule | { error: string }> {
+): Promise<ExaminerWorkSchedule | { error: string; }> {
   const journalRecord = await getJournal(staffNumber);
   if (!journalRecord) {
     // return journal not found error instead of throwing which would stop execution
@@ -48,7 +48,7 @@ export async function findJournalWithResponse(
   try {
     return decompressJournal(journalRecord.journal);
   } catch (error) {
-    logger.error(error as string);
+    logger.error(error);
     // return journal decompression error instead of throwing which would stop execution
     return { error: 'Journal decompression error' };
   }

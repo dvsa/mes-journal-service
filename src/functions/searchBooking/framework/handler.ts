@@ -6,8 +6,8 @@ import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
 import { ApplicationReference } from '@dvsa/mes-test-schema/categories/common';
 import { gzipSync } from 'zlib';
+import * as joi from '@hapi/joi';
 import { get } from 'lodash';
-import * as joi from 'joi';
 
 export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   if (!event.queryStringParameters) {
@@ -24,18 +24,20 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
 
   const applicationReference: string = event.queryStringParameters.appRef;
 
-  const staffNumber = event.pathParameters['staffNumber'] as string;
+  const staffNumber = event.pathParameters['staffNumber'];
 
   const parametersSchema = joi.object().keys({
     staffNumberValidator: joi.number().max(100000000).optional(),
     appRefValidator: joi.number().max(1000000000000).optional(),
   });
 
-  const validationResult = parametersSchema.validate(
-    {
-      staffNumberValidator: staffNumber,
-      appRefValidator: applicationReference,
-    });
+  const validationResult =
+    joi.validate(
+      {
+        staffNumberValidator: staffNumber,
+        appRefValidator: applicationReference,
+      },
+      parametersSchema);
 
   if (validationResult.error) {
     return createResponse(validationResult.error, HttpStatus.BAD_REQUEST);
