@@ -9,7 +9,7 @@ import { TestCategory } from '@dvsa/mes-test-schema/category-definitions/common/
 import { TestSlot } from '@dvsa/mes-journal-schema';
 
 describe('constructResponseArray', () => {
-  // tslint:disable-next-line:max-line-length
+  // eslint-disable-next-line
   it('should filter the examiner work schedules by testCentreID and date, returning errors if journals not found', () => {
     const response: TestCentreDetailResponse = constructResponseArray(
       mockTestCentreDetailFromDynamo,
