@@ -12,6 +12,8 @@ import { ExaminerWorkScheduleOrEmpty } from '../../framework/handler';
 
 let testCentres: TestCentre[] = [];
 
+type Section = TestSlot | NonTestActivity | Deployment | AdvanceTestSlot;
+
 export const constructResponseArray = (
   testCentreDetail: TestCentreDetail,
   journals: ExaminerWorkScheduleOrEmpty[],
@@ -66,12 +68,13 @@ const isAnyOf = (
 ): boolean => valuesToCheck.some((value: string | number) => dataValue === value);
 
 const filterByTestCentreAndDate = <T>(testCentreDetail: TestCentreDetail, info: T[] = []): T[] => {
-  return info.filter((section: TestSlot | NonTestActivity | Deployment | AdvanceTestSlot) => {
+  return info.filter((section: T) => {
+    const sec = section as Section;
     return (
-      section.testCentre &&
-      isAnyOf(section.testCentre.centreId, testCentreDetail.testCentreIDs) &&
+      sec.testCentre &&
+      isAnyOf(sec.testCentre.centreId, testCentreDetail.testCentreIDs) &&
       inNext2Days(section) &&
-      testCentres.push({ name: section.testCentre.centreName, id: section.testCentre.centreId } as TestCentre)
+      testCentres.push({ name: sec.testCentre.centreName, id: sec.testCentre.centreId } as TestCentre)
     );
   });
 };
