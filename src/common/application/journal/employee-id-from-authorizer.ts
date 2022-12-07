@@ -6,3 +6,10 @@ export const getEmployeeIdFromRequestContext = (requestContext: APIGatewayEventR
   }
   return null;
 };
+
+export const getRoleFromRequestContext = (requestContext: APIGatewayEventRequestContext): string | null => {
+  if (requestContext.authorizer && typeof requestContext.authorizer.role === 'string') {
+    return requestContext.authorizer.role;
+  }
+  return null;
+};

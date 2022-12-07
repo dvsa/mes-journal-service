@@ -5,7 +5,7 @@ const lambdaTestUtils = require('aws-lambda-test-utils');
 import * as createResponse from '../../../../common/application/utils/createResponse';
 import { APIGatewayEvent, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import * as FindTestCentreJournal from '../../../../common/application/journal/FindJournal';
-import * as FindTestCentre from '../../../../common/application/test-centre/FindTestCentre';
+import * as FindTestCentre from '../../../../common/application/test-centre/FindTestCentreByStaffNumber';
 import { Mock, It } from 'typemoq';
 import { tokens } from '../../../getJournal/framework/__mocks__/authentication-token.mock';
 import { TestCentreDetail } from '../../../../common/domain/TestCentreDetailRecord';
@@ -44,7 +44,7 @@ describe('getTestCentreJournal handler', () => {
   describe('given there is no staffNumber in authorizer response', () => {
     it('should indicate an UNAUTHORIZED request', async () => {
       createResponseSpy.and.returnValue({ statusCode: 401 });
-      const resp = await handler({ requestContext: { authorizer: {} } } as APIGatewayProxyEvent, dummyContext);
+      const resp = await handler({ requestContext: { authorizer: {} } } as APIGatewayProxyEvent);
       expect(resp.statusCode).toEqual(401);
       expect(createResponse.default).toHaveBeenCalledWith('No staff number found in request context', 401);
     });
@@ -57,7 +57,7 @@ describe('getTestCentreJournal handler', () => {
       moqFindTestCentreDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve(fakeTestCentre));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith({
@@ -80,7 +80,7 @@ describe('getTestCentreJournal handler', () => {
       moqFindTestCentreDetail.setup(x => x(It.isAny())).throws(new TestCentreNotFoundError());
       createResponseSpy.and.returnValue({ statusCode: 404 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
       expect(createResponse.default)
@@ -93,7 +93,7 @@ describe('getTestCentreJournal handler', () => {
       moqFindTestCentreDetail.setup(x => x(It.isAny())).throws(new Error('Unable to retrieve test centre journal'));
       createResponseSpy.and.returnValue({ statusCode: 500 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(500);
       expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
@@ -105,7 +105,7 @@ describe('getTestCentreJournal handler', () => {
       moqFindTestCentreDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve(null));
       createResponseSpy.and.returnValue({ statusCode: 204 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(204);
       expect(createResponse.default).toHaveBeenCalledWith({}, 204);
