@@ -1,8 +1,8 @@
-import {Examiner, TestCentreDetail, TestCentreDetailResponse} from '../../domain/TestCentreDetailRecord';
-import {findJournalWithResponse} from '../journal/FindJournal';
+import { Examiner, TestCentreDetail, TestCentreDetailResponse } from '../../domain/TestCentreDetailRecord';
+import { findJournalWithResponse } from '../journal/FindJournal';
 import * as logger from '../utils/logger';
-import {constructResponseArray} from '../../../functions/getTestCentreJournal/application/helpers/helpers';
-import {ExaminerWorkScheduleOrEmpty} from '../../../functions/getTestCentreJournalByID/framework/handler';
+import { constructResponseArray } from '../../../functions/getTestCentreJournal/application/helpers/helpers';
+import { ExaminerWorkScheduleOrEmpty } from '../../../functions/getTestCentreJournal/framework/handler';
 
 export const getTestCentreJournalPayload = async (
   testCentreDetail: TestCentreDetail,
