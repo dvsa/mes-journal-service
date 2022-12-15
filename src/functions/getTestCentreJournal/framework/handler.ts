@@ -7,7 +7,10 @@ import { HttpStatus } from '../../../common/application/api/HttpStatus';
 import * as logger from '../../../common/application/utils/logger';
 import { findTestCentreDetail } from '../../../common/application/test-centre/FindTestCentreByStaffNumber';
 import { TestCentreDetail } from '../../../common/domain/TestCentreDetailRecord';
-import { TestCentreNotFoundError } from '../../../common/domain/errors/test-centre-not-found-error';
+import {
+  TestCentreIdNotFoundError,
+  TestCentreNotFoundError,
+} from '../../../common/domain/errors/test-centre-not-found-error';
 import {
   getEmployeeIdFromRequestContext,
   getRoleFromRequestContext,
@@ -71,6 +74,9 @@ export async function handler(event: APIGatewayProxyEvent) {
   } catch (err) {
     if (err instanceof TestCentreNotFoundError) {
       return createResponse('User does not have a corresponding row in test centre table', HttpStatus.NOT_FOUND);
+    }
+    if (err instanceof TestCentreIdNotFoundError) {
+      return createResponse('No TestCentreId found using search criteria', HttpStatus.NOT_FOUND);
     }
     logger.error(err as string);
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
