@@ -4,7 +4,7 @@ import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 
 const createDynamoClient = () => {
   return process.env.IS_OFFLINE
-    ? new DynamoDB.DocumentClient({ endpoint: 'http://localhost:8000' })
+    ? new DynamoDB.DocumentClient({ endpoint: 'http://dynamodb-local:8000' })
     : new DynamoDB.DocumentClient();
 };
 
