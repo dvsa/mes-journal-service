@@ -59,11 +59,11 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
   }
 
   if (!journal) {
-    return createResponse(404);
+    return createResponse('Journal not found', 404);
   }
 
   if (!journal.testSlots || journal.testSlots.length === 0) {
-    return createResponse(404);
+    return createResponse('Journal test slots undefined or empty',404);
   }
 
   const testSlots = journal.testSlots
@@ -85,7 +85,7 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
     .filter(testSlot => testSlot);
 
   if (testSlots.length === 0) {
-    return createResponse(404);
+    return createResponse('Test slots empty after mapping', 404);
   }
 
   if (testSlots.length > 1) {
