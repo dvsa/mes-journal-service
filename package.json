@@ -30,9 +30,9 @@
     "moment": "^2.29.4"
   },
   "devDependencies": {
-    "@dvsa/mes-journal-schema": "^1.2.2",
+    "@dvsa/mes-journal-schema": "^1.3.1",
     "@dvsa/mes-microservice-common": "0.8.3",
-    "@dvsa/mes-test-schema": "3.39.10",
+    "@dvsa/mes-test-schema": "3.41.1",
     "@types/aws-lambda": "^8.10.106",
     "@types/jasmine": "^4.3.0",
     "@types/node": "^16.10.2",
