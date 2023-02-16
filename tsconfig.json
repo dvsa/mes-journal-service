@@ -8,7 +8,6 @@
       "es2017",
       "dom"
     ],
-    "target": "es5",
     "types": [
       "node",
       "jasmine",

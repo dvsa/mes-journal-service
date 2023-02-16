@@ -97,6 +97,9 @@ export const isNonADI2TestSlot = (section: TestSlot): boolean => {
 };
 
 const deriveError = (journals: ExaminerWorkScheduleOrEmpty[], index: number): string | undefined => {
+  if (!journals[index]) {
+    return undefined;
+  }
   // returning undefined when no error so it removes the key
   return ('error' in journals[index]) ? (journals[index] as { error: string }).error : undefined;
 };

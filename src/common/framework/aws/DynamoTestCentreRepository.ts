@@ -4,14 +4,14 @@ import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 
 const createDynamoClient = () => {
   return process.env.IS_OFFLINE
-    ? new DynamoDB.DocumentClient({ endpoint: 'http://localhost:8000' })
+    ? new DynamoDB.DocumentClient({ endpoint: 'http://dynamodb-local:8000' })
     : new DynamoDB.DocumentClient();
 };
 
 const ddb = createDynamoClient();
 const tableName = getTestCentreTableName();
 
-export async function getTestCentre(staffNumber: string): Promise<TestCentreDetail | null> {
+export async function getTestCentreByStaffNumber(staffNumber: string): Promise<TestCentreDetail | null> {
   const testCentreGetResult = await ddb.get({
     TableName: tableName,
     Key: {
@@ -24,6 +24,20 @@ export async function getTestCentre(staffNumber: string): Promise<TestCentreDeta
   }
 
   return testCentreGetResult.Item as TestCentreDetail;
+}
+
+export async function getTestCentreByID(tcID: number): Promise<TestCentreDetail[] | null> {
+  const testCentreScan = await ddb.scan({
+    TableName: tableName,
+    FilterExpression: 'contains (testCentreIDs, :tcID)',
+    ExpressionAttributeValues : { ':tcID' : tcID },
+  }).promise();
+
+  if (testCentreScan?.Items === undefined) {
+    return null;
+  }
+
+  return testCentreScan?.Items as TestCentreDetail[];
 }
 
 function getTestCentreTableName(): string {

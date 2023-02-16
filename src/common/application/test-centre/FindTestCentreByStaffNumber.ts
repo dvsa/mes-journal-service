@@ -1,11 +1,11 @@
 import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 import { TestCentreNotFoundError } from '../../domain/errors/test-centre-not-found-error';
-import { getTestCentre } from '../../framework/aws/DynamoTestCentreRepository';
+import { getTestCentreByStaffNumber } from '../../framework/aws/DynamoTestCentreRepository';
 
 export async function findTestCentreDetail(
   staffNumber: string,
 ): Promise<TestCentreDetail | null> {
-  const testCentreRecord: TestCentreDetail | null = await getTestCentre(staffNumber);
+  const testCentreRecord: TestCentreDetail | null = await getTestCentreByStaffNumber(staffNumber);
 
   if (!testCentreRecord) {
     throw new TestCentreNotFoundError();
