@@ -22,7 +22,7 @@ export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string
 
 export async function handler(event: APIGatewayProxyEvent) {
   try {
-    let testCentre: TestCentreDetail | null = null;
+    let testCentre: TestCentreDetail;
 
     const staffNumber: string | null = getEmployeeIdFromRequestContext(event.requestContext);
     if (staffNumber === null) {
@@ -48,25 +48,15 @@ export async function handler(event: APIGatewayProxyEvent) {
     );
 
     if (isSearchingByTestCentre) {
-      const testCentreDetails: TestCentreDetail[] | null = await findTestCentreDetailsByID(+testCentreID);
-
-      if (testCentreDetails === null) {
-        logger.customMetric('TestCentreDetailNotInTable', 'Unable to find test centre using TCID (HTTP 204)');
-        return createResponse({}, HttpStatus.NO_CONTENT);
-      }
+      const testCentreDetails: TestCentreDetail[] = await findTestCentreDetailsByID(+testCentreID);
       // manufactured the shape of data we would typically get for a staff number search.
       testCentre = {
         staffNumber: '',
         examiners: uniqBy(flatten(testCentreDetails.map((obj) => [...obj.examiners])), 'staffNumber'),
         testCentreIDs: [+testCentreID],
       } as TestCentreDetail;
-
     } else {
       testCentre = await findTestCentreDetail(staffNumber);
-      if (testCentre === null) {
-        logger.customMetric('TestCentreDetailNotInTable', 'Unable to find test centre using staff number (HTTP 204)');
-        return createResponse({}, HttpStatus.NO_CONTENT);
-      }
     }
 
     const result = await getTestCentreJournalPayload(testCentre);

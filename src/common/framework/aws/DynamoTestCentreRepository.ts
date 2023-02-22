@@ -33,7 +33,7 @@ export async function getTestCentreByID(tcID: number): Promise<TestCentreDetail[
     ExpressionAttributeValues : { ':tcID' : tcID },
   }).promise();
 
-  if (testCentreScan?.Items === undefined) {
+  if (testCentreScan?.Items === undefined || testCentreScan?.Items?.length === 0) {
     return null;
   }
 

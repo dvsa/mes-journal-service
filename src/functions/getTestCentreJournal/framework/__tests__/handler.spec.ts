@@ -105,17 +105,6 @@ describe('getTestCentreJournal handler', () => {
         expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
       });
     });
-    describe('given the FindTestCentreJournal returns null', () => {
-      it('should respond with no content status code', async () => {
-        moqFindTestCentreSNDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve(null));
-        createResponseSpy.and.returnValue({ statusCode: 204 });
-
-        const resp = await handler(dummyApigwEvent);
-
-        expect(resp.statusCode).toBe(204);
-        expect(createResponse.default).toHaveBeenCalledWith({}, 204);
-      });
-    });
   });
 
   describe('getTestCentreJournal by TC ID', () => {

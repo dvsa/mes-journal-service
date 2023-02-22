@@ -4,7 +4,7 @@ import { getTestCentreByStaffNumber } from '../../framework/aws/DynamoTestCentre
 
 export async function findTestCentreDetail(
   staffNumber: string,
-): Promise<TestCentreDetail | null> {
+): Promise<TestCentreDetail> {
   const testCentreRecord: TestCentreDetail | null = await getTestCentreByStaffNumber(staffNumber);
 
   if (!testCentreRecord) {
