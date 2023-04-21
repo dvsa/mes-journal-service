@@ -71,9 +71,9 @@ export async function handler(event: APIGatewayProxyEvent, fnCtx: Context) {
       if (get(testSlot, 'booking.application', null)) {
         const application = get(testSlot, 'booking.application', null);
         const currentAppRef: ApplicationReference = {
-          applicationId: application.applicationId,
-          checkDigit: application.checkDigit,
-          bookingSequence: application.bookingSequence,
+          applicationId: application?.applicationId || 0,
+          checkDigit: application?.checkDigit || 0,
+          bookingSequence: application?.bookingSequence || 0,
         };
 
         const formattedSlotAppRef = formatApplicationReference(currentAppRef);
