@@ -73,13 +73,13 @@ const filterByTestCentreAndDate = <T>(testCentreDetail: TestCentreDetail, info: 
     return (
       sec.testCentre &&
       isAnyOf(sec.testCentre.centreId, testCentreDetail.testCentreIDs) &&
-      inNext2Days(section) &&
+      inNext2Days(sec) &&
       testCentres.push({ name: sec.testCentre.centreName, id: sec.testCentre.centreId } as TestCentre)
     );
   });
 };
 
-const inNext2Days = <T>(section: T): boolean => {
+const inNext2Days = <T extends TestSlot>(section: T): boolean => {
   const slotDate: string = get(section, 'slotDetail.start', '');
 
   const today: boolean = moment(slotDate).isSame(moment(), 'day');
