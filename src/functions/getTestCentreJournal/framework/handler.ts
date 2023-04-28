@@ -1,12 +1,12 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
-import {APIGatewayProxyEvent, APIGatewayProxyEventPathParameters} from 'aws-lambda';
+import { APIGatewayProxyEvent, APIGatewayProxyEventPathParameters } from 'aws-lambda';
 import { flatten, uniqBy } from 'lodash';
+import { bootstrapLogging, debug, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
 
 import createResponse from '../../../common/application/utils/createResponse';
 import { HttpStatus } from '../../../common/application/api/HttpStatus';
-import * as logger from '../../../common/application/utils/logger';
 import { findTestCentreDetail } from '../../../common/application/test-centre/FindTestCentreByStaffNumber';
-import { TestCentreDetail } from '../../../common/domain/TestCentreDetailRecord';
+import {TestCentreDetail} from '../../../common/domain/TestCentreDetailRecord';
 import {
   TestCentreIdNotFoundError,
   TestCentreNotFoundError,
@@ -22,12 +22,17 @@ export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string
 
 export async function handler(event: APIGatewayProxyEvent) {
   try {
+    bootstrapLogging('test-centre-journal', event);
+
     let testCentre: TestCentreDetail;
 
     const staffNumber: string | null = getEmployeeIdFromRequestContext(event.requestContext);
     if (staffNumber === null) {
+      error('No staff number found in request context', event.requestContext);
       return createResponse('No staff number found in request context', HttpStatus.UNAUTHORIZED);
     }
+
+    debug('Staff number found in request context', staffNumber);
 
     // extract the test centre id from the path params if it exists;
     const testCentreID = getTestCentreID(event.pathParameters);
@@ -38,10 +43,11 @@ export async function handler(event: APIGatewayProxyEvent) {
     // check the user has sufficient permissions to search using TC id;
     const role: string | null = getRoleFromRequestContext(event.requestContext);
     if (role !== 'LDTM' && isSearchingByTestCentre) {
+      error('LDTM examiner role is required to search by TC id', role);
       return createResponse('LDTM examiner role is required to search by TC id', HttpStatus.UNAUTHORIZED);
     }
 
-    logger.info(
+    info(
       isSearchingByTestCentre
         ? `Finding test centre detail using TC ID ${testCentreID}`
         : `Finding test centre detail for staff number ${staffNumber}`
@@ -49,10 +55,18 @@ export async function handler(event: APIGatewayProxyEvent) {
 
     if (isSearchingByTestCentre) {
       const testCentreDetails: TestCentreDetail[] = await findTestCentreDetailsByID(+testCentreID);
+
+      // loop through dynamo results, lookup staff inside examiners array and make distinct in-case of duplicates
+      const examiners = uniqBy(
+        testCentreDetails
+          .map(({ examiners, staffNumber }) =>
+            examiners?.find((exam) => exam.staffNumber?.toString() === staffNumber.toString())),
+        'staffNumber'
+      );
       // manufactured the shape of data we would typically get for a staff number search.
       testCentre = {
         staffNumber: '',
-        examiners: uniqBy(flatten(testCentreDetails.map((obj) => [...obj.examiners])), 'staffNumber'),
+        examiners,
         testCentreIDs: [+testCentreID],
       } as TestCentreDetail;
     } else {
@@ -63,12 +77,14 @@ export async function handler(event: APIGatewayProxyEvent) {
     return createResponse(result);
   } catch (err) {
     if (err instanceof TestCentreNotFoundError) {
+      error('TestCentreNotFoundError');
       return createResponse('User does not have a corresponding row in test centre table', HttpStatus.NOT_FOUND);
     }
     if (err instanceof TestCentreIdNotFoundError) {
+      error('TestCentreIdNotFoundError');
       return createResponse('No TestCentreId found using search criteria', HttpStatus.NOT_FOUND);
     }
-    logger.error(err as string);
+    error('Unknown error', err);
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
