@@ -28,7 +28,7 @@
     "vulnerability-check": "snyk test --severity-threshold=high"
   },
   "dependencies": {
-    "aws-sdk": "^2.1362.0",
+    "aws-sdk": "^2.1363.0",
     "joi": "^17.9.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4"
