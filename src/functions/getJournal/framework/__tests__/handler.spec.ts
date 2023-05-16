@@ -2,7 +2,7 @@ import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { handler } from '../handler';
 const lambdaTestUtils = require('aws-lambda-test-utils');
 import * as createResponse from '../../../../common/application/utils/createResponse';
-import { APIGatewayEvent, Context } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
 import * as FindJournal from '../../../../common/application/journal/FindJournal';
 import { tokens } from '../__mocks__/authentication-token.mock';
 import { Mock, It, Times } from 'typemoq';
@@ -15,7 +15,6 @@ describe('getJournal handler', () => {
     },
   };
   let dummyApigwEvent: APIGatewayEvent;
-  let dummyContext: Context;
   let createResponseSpy: jasmine.Spy;
 
   const moqFindJournal = Mock.ofInstance(FindJournal.findJournal);
@@ -34,7 +33,6 @@ describe('getJournal handler', () => {
       },
     });
     dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345678' };
-    dummyContext = lambdaTestUtils.mockContextCreator(() => null);
     process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = undefined;
     spyOn(FindJournal, 'findJournal').and.callFake(moqFindJournal.object);
   });
@@ -44,7 +42,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -56,7 +54,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).throws(new JournalNotFoundError());
       createResponseSpy.and.returnValue({ statusCode: 404 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
       expect(createResponse.default).toHaveBeenCalledWith({}, 404);
@@ -68,7 +66,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(null));
       createResponseSpy.and.returnValue({ statusCode: 304 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(304);
       expect(createResponse.default).toHaveBeenCalledWith({}, 304);
@@ -80,7 +78,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).throws(new Error('Unable to retrieve journal'));
       createResponseSpy.and.returnValue({ statusCode: 500 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(500);
       expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve journal', 500);
@@ -92,7 +90,7 @@ describe('getJournal handler', () => {
       dummyApigwEvent.pathParameters = {};
       createResponseSpy.and.returnValue({ statusCode: 400 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
       expect(createResponse.default).toHaveBeenCalledWith('No staffNumber provided', 400);
@@ -108,7 +106,7 @@ describe('getJournal handler', () => {
       createResponseSpy.and.returnValue({ statusCode: 200 });
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -123,7 +121,7 @@ describe('getJournal handler', () => {
         dummyApigwEvent.requestContext.authorizer = null;
         createResponseSpy.and.returnValue({ statusCode: 401 });
 
-        const resp = await handler(dummyApigwEvent, dummyContext);
+        const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(401);
         expect(createResponse.default).toHaveBeenCalledWith('No staff number found in request context', 401);
@@ -140,7 +138,7 @@ describe('getJournal handler', () => {
       dummyApigwEvent.requestContext.authorizer = { staffNumber: '999999' };
       createResponseSpy.and.returnValue({ statusCode: 403 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(403);
       expect(createResponse.default).toHaveBeenCalledWith('Invalid staffNumber', 403);
@@ -153,7 +151,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -167,7 +165,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -181,7 +179,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -199,7 +197,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
@@ -215,7 +213,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      await handler(dummyApigwEvent, dummyContext);
+      await handler(dummyApigwEvent);
 
       moqFindJournal.verify(x => x(It.isValue('12345678'), It.isValue(1558624157000)), Times.once());
     });
@@ -229,7 +227,7 @@ describe('getJournal handler', () => {
       moqFindJournal.setup(x => x(It.isAny(), It.isAny())).returns(() => Promise.resolve(fakeJournal));
       createResponseSpy.and.returnValue({ statusCode: 200 });
 
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
       expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);

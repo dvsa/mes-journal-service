@@ -1,35 +1,34 @@
-import { DynamoDB } from 'aws-sdk';
-import * as logger from '../../../common/application/utils/logger';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { DynamoDB } from '@aws-sdk/client-dynamodb';
+import { warn } from '@dvsa/mes-microservice-common/application/utils/logger';
 import { JournalRecord } from '../../domain/JournalRecord';
 
 const createDynamoClient = () => {
   return process.env.IS_OFFLINE
-    ? new DynamoDB.DocumentClient({ endpoint: 'http://dynamodb-local:8000' })
-    : new DynamoDB.DocumentClient();
+    ? DynamoDBDocument.from(new DynamoDB({ endpoint: 'http://dynamodb-local:8000' }))
+    : DynamoDBDocument.from(new DynamoDB({ region: 'eu-west-1' }));
 };
 
 const ddb = createDynamoClient();
 const tableName = getJournalTableName();
 
 export async function getJournal(staffNumber: string): Promise<JournalRecord | null> {
-  const journalGetResult = await ddb.get({
+  const response = await ddb.get({
     TableName: tableName,
-    Key: {
-      staffNumber,
-    },
-  }).promise();
+    Key: { staffNumber },
+  });
 
-  if (journalGetResult.Item === undefined) {
+  if (response.Item === undefined) {
     return null;
   }
 
-  return journalGetResult.Item as JournalRecord;
+  return response.Item as JournalRecord;
 }
 
 function getJournalTableName(): string {
   let tableName = process.env.JOURNALS_DDB_TABLE_NAME;
   if (tableName === undefined || tableName.length === 0) {
-    logger.warn('No journal table name set, using the default');
+    warn('No journal table name set, using the default');
     tableName = 'journal';
   }
   return tableName;

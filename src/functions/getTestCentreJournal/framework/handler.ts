@@ -1,6 +1,6 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { APIGatewayProxyEvent, APIGatewayProxyEventPathParameters } from 'aws-lambda';
-import { flatten, uniqBy } from 'lodash';
+import { uniqBy } from 'lodash';
 import { bootstrapLogging, debug, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
 
 import createResponse from '../../../common/application/utils/createResponse';
@@ -47,13 +47,9 @@ export async function handler(event: APIGatewayProxyEvent) {
       return createResponse('LDTM examiner role is required to search by TC id', HttpStatus.UNAUTHORIZED);
     }
 
-    info(
-      isSearchingByTestCentre
-        ? `Finding test centre detail using TC ID ${testCentreID}`
-        : `Finding test centre detail for staff number ${staffNumber}`
-    );
-
     if (isSearchingByTestCentre) {
+      info(`Finding test centre detail using TC ID ${testCentreID}`);
+
       const testCentreDetails: TestCentreDetail[] = await findTestCentreDetailsByID(+testCentreID);
 
       // loop through dynamo results, lookup staff inside examiners array and make distinct in-case of duplicates
@@ -70,12 +66,16 @@ export async function handler(event: APIGatewayProxyEvent) {
         testCentreIDs: [+testCentreID],
       } as TestCentreDetail;
     } else {
+      info(`Finding test centre detail for staff number ${staffNumber}`);
       testCentre = await findTestCentreDetail(staffNumber);
     }
 
     const result = await getTestCentreJournalPayload(testCentre);
+
+    info(`Returning TCJ payload with ${result.examiners?.length} examiner(s)`);
+
     return createResponse(result);
-  } catch (err) {
+  } catch (err: unknown) {
     if (err instanceof TestCentreNotFoundError) {
       error('TestCentreNotFoundError');
       return createResponse('User does not have a corresponding row in test centre table', HttpStatus.NOT_FOUND);
@@ -84,7 +84,7 @@ export async function handler(event: APIGatewayProxyEvent) {
       error('TestCentreIdNotFoundError');
       return createResponse('No TestCentreId found using search criteria', HttpStatus.NOT_FOUND);
     }
-    error('Unknown error', err);
+    error('Unknown error', (err as Error)?.message || err);
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 }
