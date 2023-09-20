@@ -11,8 +11,6 @@ permissions:
 jobs:
   runs-deploy:
     uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
-    with:
-      service-name: 'journal'
     secrets:
       DES_ACCESS_TOKEN: ${{ secrets.DES_ACCESS_TOKEN }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
