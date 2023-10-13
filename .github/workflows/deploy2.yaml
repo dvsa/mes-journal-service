@@ -1,12 +1,19 @@
-name: CI
+name: Deploy
 
 on:
   push:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
 
 jobs:
-  run-test:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: 📨 Checkout
-        uses: actions/checkout@v3
+  runs-deploy:
+    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9097-add-component-manifest-for-deploy-be
+    with:
+      component: 'api'
+    secrets:
+      DES_ACCESS_TOKEN: ${{ secrets.DES_ACCESS_TOKEN }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      MSTEAMS_WEBHOOK: ${{ secrets.MSTEAMS_WEBHOOK }}
