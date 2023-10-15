@@ -10,9 +10,7 @@ permissions:
 
 jobs:
   runs-deploy:
-    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9097-add-component-manifest-for-deploy-be
-    with:
-      component: 'api'
+    uses: dvsa/des-workflow-actions/.github/workflows/ci-backend.yaml
     secrets:
       DES_ACCESS_TOKEN: ${{ secrets.DES_ACCESS_TOKEN }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
