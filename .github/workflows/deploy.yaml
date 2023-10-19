@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   runs-deploy:
-    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9097-add-component-manifest-for-deploy-be
+    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
     with:
       component: 'api'
     secrets: inherit
