@@ -2,7 +2,7 @@ service: mes-journal-service
 
 provider:
   name: aws
-  runtime: nodejs16.x
+  runtime: nodejs18.x
   lambdaHashingVersion: 20201221
   environment:
     JOURNALS_DDB_TABLE_NAME: journals
@@ -83,5 +83,5 @@ resources:
 plugins:
   - serverless-dotenv-plugin
   - serverless-webpack
-  - serverless-dynamodb-local
+  - serverless-dynamodb
   - serverless-offline
