@@ -17,7 +17,6 @@ const lambdaTestUtils = require('aws-lambda-test-utils');
 
 describe('searchBooking handler', () => {
   let dummyApigwEvent: APIGatewayEvent;
-  let dummyContext: Context;
   let createResponseSpy: jasmine.Spy;
 
   const moqFindJournal = Mock.ofInstance(FindJournal.findJournal);
@@ -36,7 +35,6 @@ describe('searchBooking handler', () => {
       },
     });
     dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345678' };
-    dummyContext = lambdaTestUtils.mockContextCreator(() => null);
     process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = undefined;
     spyOn(FindJournal, 'findJournal').and.callFake(moqFindJournal.object);
   });
@@ -56,7 +54,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(findJournalResult));
       createResponseSpy.and.returnValue({ statusCode: 404 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
       expect(createResponse.default)
@@ -79,7 +77,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(findJournalResult));
       createResponseSpy.and.returnValue({ statusCode: 404 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
     });
@@ -100,7 +98,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(correctStaffNumber), It.isAny())).returns(() => Promise.resolve(findJournalResult));
       createResponseSpy.and.returnValue({ statusCode: 404 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
     });
@@ -124,7 +122,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(noTestSlotJournal));
       createResponseSpy.and.returnValue({ statusCode: 404 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
     });
@@ -142,7 +140,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(findJournalResult));
       createResponseSpy.and.returnValue({ statusCode: 400 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
       expect(createResponse.default)
@@ -168,7 +166,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(noTestSlotJournal));
       createResponseSpy.and.returnValue({ statusCode: 400 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
     });
@@ -192,7 +190,7 @@ describe('searchBooking handler', () => {
       moqFindJournal
         .setup(x => x(It.isValue(staffNumberParameter), It.isAny())).returns(() => Promise.resolve(noTestSlotJournal));
       createResponseSpy.and.returnValue({ statusCode: 400 });
-      const resp = await handler(dummyApigwEvent, dummyContext);
+      const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
     });

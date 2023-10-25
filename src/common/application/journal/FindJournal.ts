@@ -1,16 +1,17 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { decompressJournal } from '../service/journal-decompressor';
-import * as logger from '../utils/logger';
 import { JournalRecord } from '../../domain/JournalRecord';
 import { JournalNotFoundError } from '../../domain/errors/journal-not-found-error';
 import { JournalDecompressionError } from '../../domain/errors/journal-decompression-error';
 import { getJournal } from '../../framework/aws/DynamoJournalRepository';
+import { error } from '@dvsa/mes-microservice-common/application/utils/logger';
 
 /**
  * Finds a journal with a specified staffNumber.
  * Throws a JournalNotFoundError if it the repo could not find one.
  * Throws a JournalDecompressionError if decompression fails
  * @param staffNumber the staff number of the journal to find
+ * @param modifiedSinceTimestamp
  */
 export async function findJournal(
   staffNumber: string,
@@ -27,7 +28,6 @@ export async function findJournal(
   try {
     return decompressJournal(journalRecord.journal);
   } catch (error) {
-    logger.error(error as string);
     throw new JournalDecompressionError();
   }
 }
@@ -47,8 +47,8 @@ export async function findJournalWithResponse(
 
   try {
     return decompressJournal(journalRecord.journal);
-  } catch (error) {
-    logger.error(error as string);
+  } catch (err) {
+    error(err as string);
     // return journal decompression error instead of throwing which would stop execution
     return { error: 'Journal decompression error' };
   }

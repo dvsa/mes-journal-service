@@ -1,6 +1,6 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
-import { APIGatewayProxyEvent, APIGatewayProxyEventPathParameters } from 'aws-lambda';
-import { flatten, uniqBy } from 'lodash';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { uniqBy } from 'lodash';
 import { bootstrapLogging, debug, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
 
 import createResponse from '../../../common/application/utils/createResponse';
@@ -12,11 +12,12 @@ import {
   TestCentreNotFoundError,
 } from '../../../common/domain/errors/test-centre-not-found-error';
 import {
-  getEmployeeIdFromRequestContext,
   getRoleFromRequestContext,
 } from '../../../common/application/journal/employee-id-from-authorizer';
 import { getTestCentreJournalPayload } from '../../../common/application/test-centre/determine-response-payload';
 import { findTestCentreDetailsByID } from '../../../common/application/test-centre/FindTestCentreByID';
+import {getStaffNumberFromRequestContext} from '@dvsa/mes-microservice-common/framework/security/authorisation';
+import {getTestCentreID} from '../application/request-validator';
 
 export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string };
 
@@ -26,7 +27,7 @@ export async function handler(event: APIGatewayProxyEvent) {
 
     let testCentre: TestCentreDetail;
 
-    const staffNumber: string | null = getEmployeeIdFromRequestContext(event.requestContext);
+    const staffNumber: string | null = getStaffNumberFromRequestContext(event.requestContext);
     if (staffNumber === null) {
       error('No staff number found in request context', event.requestContext);
       return createResponse('No staff number found in request context', HttpStatus.UNAUTHORIZED);
@@ -84,17 +85,9 @@ export async function handler(event: APIGatewayProxyEvent) {
       error('TestCentreIdNotFoundError');
       return createResponse('No TestCentreId found using search criteria', HttpStatus.NOT_FOUND);
     }
-    error('Unknown error', err);
+
+    error((err instanceof Error) ? err.message : `Unknown error: ${err}`);
+
     return createResponse('Unable to retrieve test centre journal', HttpStatus.INTERNAL_SERVER_ERROR);
   }
-}
-
-function getTestCentreID(pathParams: APIGatewayProxyEventPathParameters | null): string | null {
-  if (pathParams === null
-    || typeof pathParams.testCentreId !== 'string'
-    || pathParams.testCentreId.trim().length === 0
-  ) {
-    return null;
-  }
-  return pathParams.testCentreId;
 }

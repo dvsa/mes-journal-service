@@ -1,6 +1,6 @@
+import { customMetric } from '@dvsa/mes-microservice-common/application/utils/logger';
 import { Examiner, TestCentreDetail, TestCentreDetailResponse } from '../../domain/TestCentreDetailRecord';
 import { findJournalWithResponse } from '../journal/FindJournal';
-import * as logger from '../utils/logger';
 import { constructResponseArray } from '../../../functions/getTestCentreJournal/application/helpers/helpers';
 import { ExaminerWorkScheduleOrEmpty } from '../../../functions/getTestCentreJournal/framework/handler';
 
@@ -18,7 +18,7 @@ export const getTestCentreJournalPayload = async (
   const journals: ExaminerWorkScheduleOrEmpty[] = await Promise.all(
     testCentreStaffNumbers.map(async (staffNum: string) => await findJournalWithResponse(staffNum)),
   );
-  logger.customMetric('TestCentreDetailFound', 'Number of populated responses sent (HTTP 200)');
+  customMetric('TestCentreDetailFound', 'Number of populated responses sent (HTTP 200)');
 
   // last step is to merge the journals data with the testCentre object to assign journals to each examiner and
   // to filter by testCentreID
