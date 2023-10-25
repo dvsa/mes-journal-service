@@ -28,14 +28,16 @@
     "vulnerability-check": "snyk test --severity-threshold=high"
   },
   "dependencies": {
-    "aws-sdk": "^2.1478.0",
+    "@aws-sdk/client-dynamodb": "^3.435.0",
+    "@aws-sdk/lib-dynamodb": "^3.435.0",
+    "@dvsa/mes-microservice-common": "1.0.2",
     "joi": "^17.11.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4"
   },
   "devDependencies": {
+    "@aws-sdk/credential-providers": "^3.435.0",
     "@dvsa/mes-journal-schema": "^1.3.1",
-    "@dvsa/mes-microservice-common": "1.0.2",
     "@dvsa/mes-test-schema": "3.42.5",
     "@types/aws-lambda": "^8.10.125",
     "@types/jasmine": "^5.1.1",
