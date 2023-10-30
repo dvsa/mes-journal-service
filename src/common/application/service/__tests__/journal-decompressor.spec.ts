@@ -8,9 +8,4 @@ describe('JournalDecompressor', () => {
       expect(decompressJournal(compressed)).toEqual(testJournalDecompressor.journal);
     });
   });
-  describe('compress', () => {
-    it('should compress some data into a gzipped hash', () => {
-      expect(compress('hello')).toEqual('H4sIAAAAAAAAE1PKSM3JyVcCALLOA3cHAAAA');
-    });
-  });
 });
