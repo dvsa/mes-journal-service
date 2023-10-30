@@ -10,7 +10,7 @@ describe('JournalDecompressor', () => {
   });
   describe('compress', () => {
     it('should compress some data into a gzipped hash', () => {
-      expect(compress('hello')).toEqual('');
+      expect(compress('hello')).toEqual('H4sIAAAAAAAAE1PKSM3JyVcCALLOA3cHAAAA');
     });
   });
 });
