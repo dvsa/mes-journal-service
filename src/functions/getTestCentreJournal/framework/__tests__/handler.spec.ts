@@ -2,7 +2,7 @@ import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { handler } from '../handler';
 
 const lambdaTestUtils = require('aws-lambda-test-utils');
-import * as createResponse from '../../../../common/application/utils/createResponse';
+import * as response from '@dvsa/mes-microservice-common/application/api/create-response';
 import { APIGatewayEvent, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import * as FindTestCentreJournal from '../../../../common/application/journal/FindJournal';
 import * as FindTestCentreByStaffNumber from '../../../../common/application/test-centre/FindTestCentreByStaffNumber';
@@ -16,16 +16,15 @@ import {
 } from '../../../../common/domain/errors/test-centre-not-found-error';
 
 describe('getTestCentreJournal handler', () => {
-  const fakeTestCentre: TestCentreDetail = {
+  const fakeTestCentre = {
     staffNumber: '123',
     examiners: [
       { staffNumber: '123', name: 'Some User' },
     ],
     testCentreIDs: [1234],
-  };
+  } as TestCentreDetail;
 
   let dummyApigwEvent: APIGatewayEvent;
-  let dummyContext: Context;
   let createResponseSpy: jasmine.Spy;
 
   const moqFindTestCentreSNDetail = Mock.ofInstance(FindTestCentreByStaffNumber.findTestCentreDetail);
@@ -35,7 +34,7 @@ describe('getTestCentreJournal handler', () => {
     moqFindTestCentreSNDetail.reset();
     moqFindTestCentreTcIdDetail.reset();
 
-    createResponseSpy = spyOn(createResponse, 'default');
+    createResponseSpy = spyOn(response, 'createResponse');
     dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +42,6 @@ describe('getTestCentreJournal handler', () => {
       },
     });
     dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345677' };
-    dummyContext = lambdaTestUtils.mockContextCreator(() => null);
     spyOn(FindTestCentreByStaffNumber, 'findTestCentreDetail').and.callFake(moqFindTestCentreSNDetail.object);
     spyOn(FindTestCentreByTcID, 'findTestCentreDetailsByID').and.callFake(moqFindTestCentreTcIdDetail.object);
   });
@@ -53,7 +51,7 @@ describe('getTestCentreJournal handler', () => {
       createResponseSpy.and.returnValue({ statusCode: 401 });
       const resp = await handler({ requestContext: { authorizer: {} } } as APIGatewayProxyEvent);
       expect(resp.statusCode).toEqual(401);
-      expect(createResponse.default).toHaveBeenCalledWith('No staff number found in request context', 401);
+      expect(response.createResponse).toHaveBeenCalledWith('No staff number found in request context', 401);
     });
   });
 
@@ -68,7 +66,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(200);
-        expect(createResponse.default).toHaveBeenCalledWith({
+        expect(response.createResponse).toHaveBeenCalledWith({
           staffNumber: '123',
           examiners: [
             {
@@ -90,7 +88,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(404);
-        expect(createResponse.default)
+        expect(response.createResponse)
           .toHaveBeenCalledWith('User does not have a corresponding row in test centre table', 404);
       });
     });
@@ -102,7 +100,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(500);
-        expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
+        expect(response.createResponse).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
       });
     });
   });
@@ -124,13 +122,16 @@ describe('getTestCentreJournal handler', () => {
     describe('given the findTestCentreDetailsByID returns a test centre row', () => {
       it('should return a successful response with the test centre detail', async () => {
         spyOn(FindTestCentreJournal, 'findJournalWithResponse').and.returnValue(Promise.resolve({}));
-        moqFindTestCentreTcIdDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve([fakeTestCentre]));
+        moqFindTestCentreTcIdDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve({
+          ...fakeTestCentre,
+          staffNumber: '',
+        }));
         createResponseSpy.and.returnValue({ statusCode: 200 });
 
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(200);
-        expect(createResponse.default).toHaveBeenCalledWith({
+        expect(response.createResponse).toHaveBeenCalledWith({
           staffNumber: '',
           examiners: [
             {
@@ -152,7 +153,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(404);
-        expect(createResponse.default)
+        expect(response.createResponse)
           .toHaveBeenCalledWith('No TestCentreId found using search criteria', 404);
       });
     });
@@ -165,7 +166,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(500);
-        expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
+        expect(response.createResponse).toHaveBeenCalledWith('Unable to retrieve test centre journal', 500);
       });
     });
     describe('given the request is made as by a DE', () => {
@@ -179,7 +180,7 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(401);
-        expect(createResponse.default).toHaveBeenCalledWith('LDTM examiner role is required to search by TC id', 401);
+        expect(response.createResponse).toHaveBeenCalledWith('LDTM examiner role is required to search by TC id', 401);
       });
     });
   });

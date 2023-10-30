@@ -1,14 +1,14 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
+import { error } from '@dvsa/mes-microservice-common/application/utils/logger';
 import { decompressJournal } from '../service/journal-decompressor';
 import { JournalRecord } from '../../domain/JournalRecord';
 import { JournalNotFoundError } from '../../domain/errors/journal-not-found-error';
 import { JournalDecompressionError } from '../../domain/errors/journal-decompression-error';
 import { getJournal } from '../../framework/aws/DynamoJournalRepository';
-import { error } from '@dvsa/mes-microservice-common/application/utils/logger';
 
 /**
  * Finds a journal with a specified staffNumber.
- * Throws a JournalNotFoundError if it the repo could not find one.
+ * Throws a JournalNotFoundError if the repo could not find one.
  * Throws a JournalDecompressionError if decompression fails
  * @param staffNumber the staff number of the journal to find
  * @param modifiedSinceTimestamp

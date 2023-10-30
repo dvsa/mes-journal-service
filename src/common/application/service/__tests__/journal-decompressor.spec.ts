@@ -1,4 +1,4 @@
-import { decompressJournal } from '../journal-decompressor';
+import {compress, decompressJournal} from '../journal-decompressor';
 import testJournalDecompressor from '../__mocks__/test-journal-decompressor';
 
 describe('JournalDecompressor', () => {
