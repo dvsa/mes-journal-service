@@ -1,10 +1,10 @@
-import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient, DynamoDBClientConfig} from '@aws-sdk/client-dynamodb';
-import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 import { warn } from '@dvsa/mes-microservice-common/application/utils/logger';
 import { fromIni } from '@aws-sdk/credential-providers';
+import { GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 
-const createDynamoClient = (): DynamoDBDocument => {
+const createDynamoClient = () => {
   const opts = { region: 'eu-west-1' } as DynamoDBClientConfig;
 
   if (process.env.USE_CREDENTIALS === 'true') {
@@ -15,19 +15,19 @@ const createDynamoClient = (): DynamoDBDocument => {
     opts.endpoint = process.env.DDB_OFFLINE_ENDPOINT;
   }
 
-  return DynamoDBDocument.from(new DynamoDBClient(opts));
+  return new DynamoDBClient(opts);
 };
 
 const ddb = createDynamoClient();
 const tableName = getTestCentreTableName();
 
 export async function getTestCentreByStaffNumber(staffNumber: string): Promise<TestCentreDetail | null> {
-  const response = await ddb.get({
-    TableName: tableName,
-    Key: {
-      staffNumber,
-    },
-  });
+  const response = await ddb.send(
+    new GetCommand({
+      TableName: tableName,
+      Key: { staffNumber },
+    })
+  );
 
   if (response.Item === undefined) {
     return null;
@@ -37,11 +37,13 @@ export async function getTestCentreByStaffNumber(staffNumber: string): Promise<T
 }
 
 export async function getTestCentreByID(tcID: number): Promise<TestCentreDetail[] | null> {
-  const response = await ddb.scan({
-    TableName: tableName,
-    FilterExpression: 'contains (testCentreIDs, :tcID)',
-    ExpressionAttributeValues : { ':tcID' : tcID },
-  });
+  const response = await ddb.send(
+    new ScanCommand({
+      TableName: tableName,
+      FilterExpression: 'contains (testCentreIDs, :tcID)',
+      ExpressionAttributeValues : { ':tcID' : tcID },
+    })
+  );
 
   if (response?.Items === undefined || response?.Items?.length === 0) {
     return null;

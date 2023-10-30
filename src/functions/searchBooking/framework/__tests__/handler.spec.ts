@@ -1,8 +1,9 @@
-import { APIGatewayEvent, Context } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
 import { It, Mock } from 'typemoq';
 import { gzipSync } from 'zlib';
+import * as response from '@dvsa/mes-microservice-common/application/api/create-response';
+const lambdaTestUtils = require('aws-lambda-test-utils');
 import * as FindJournal from '../../../../common/application/journal/FindJournal';
-import * as createResponse from '../../../../common/application/utils/createResponse';
 import { tokens } from '../../../getJournal/framework/__mocks__/authentication-token.mock';
 import { handler } from '../handler';
 import {
@@ -13,7 +14,6 @@ import {
   incorrectStaffNumber,
   resultTestSlot,
 } from './handler.spec.data';
-const lambdaTestUtils = require('aws-lambda-test-utils');
 
 describe('searchBooking handler', () => {
   let dummyApigwEvent: APIGatewayEvent;
@@ -24,7 +24,7 @@ describe('searchBooking handler', () => {
   beforeEach(() => {
     moqFindJournal.reset();
 
-    createResponseSpy = spyOn(createResponse, 'default');
+    createResponseSpy = spyOn(response, 'createResponse');
     dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
       pathParameters: {
         staffNumber: '12345678',
@@ -57,7 +57,7 @@ describe('searchBooking handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
-      expect(createResponse.default)
+      expect(response.createResponse)
         .toHaveBeenCalledWith(gzipSync(JSON.stringify(resultTestSlot)).toString('base64'));
     });
   });
@@ -143,7 +143,7 @@ describe('searchBooking handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
-      expect(createResponse.default)
+      expect(response.createResponse)
         .toHaveBeenCalledWith('Query parameter app reference needs to be supplied', 400);
     });
   });

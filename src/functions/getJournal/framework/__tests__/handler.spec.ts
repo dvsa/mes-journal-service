@@ -1,8 +1,8 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
-import { handler } from '../handler';
 const lambdaTestUtils = require('aws-lambda-test-utils');
-import * as createResponse from '../../../../common/application/utils/createResponse';
-import { APIGatewayEvent, Context } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
+import * as response from '@dvsa/mes-microservice-common/application/api/create-response';
+import { handler } from '../handler';
 import * as FindJournal from '../../../../common/application/journal/FindJournal';
 import { tokens } from '../__mocks__/authentication-token.mock';
 import { Mock, It, Times } from 'typemoq';
@@ -22,7 +22,7 @@ describe('getJournal handler', () => {
   beforeEach(() => {
     moqFindJournal.reset();
 
-    createResponseSpy = spyOn(createResponse, 'default');
+    createResponseSpy = spyOn(response, 'createResponse');
     dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
       pathParameters: {
         staffNumber: '12345678',
@@ -45,7 +45,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
     });
   });
 
@@ -57,7 +57,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(404);
-      expect(createResponse.default).toHaveBeenCalledWith({}, 404);
+      expect(response.createResponse).toHaveBeenCalledWith({}, 404);
     });
   });
 
@@ -69,7 +69,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(304);
-      expect(createResponse.default).toHaveBeenCalledWith({}, 304);
+      expect(response.createResponse).toHaveBeenCalledWith({}, 304);
     });
   });
 
@@ -81,7 +81,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(500);
-      expect(createResponse.default).toHaveBeenCalledWith('Unable to retrieve journal', 500);
+      expect(response.createResponse).toHaveBeenCalledWith('Unable to retrieve journal', 500);
     });
   });
 
@@ -93,7 +93,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
-      expect(createResponse.default).toHaveBeenCalledWith('No staffNumber provided', 400);
+      expect(response.createResponse).toHaveBeenCalledWith('No staffNumber provided', 400);
     });
   });
 
@@ -109,7 +109,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
       moqFindJournal.verify(x => x(It.isValue('999999'), It.isAny()), Times.once());
     });
     describe('given there is no employeeId in the request context', () => {
@@ -124,7 +124,7 @@ describe('getJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(401);
-        expect(createResponse.default).toHaveBeenCalledWith('No staff number found in request context', 401);
+        expect(response.createResponse).toHaveBeenCalledWith('No staff number found in request context', 401);
       });
     });
   });
@@ -141,7 +141,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(403);
-      expect(createResponse.default).toHaveBeenCalledWith('Invalid staffNumber', 403);
+      expect(response.createResponse).toHaveBeenCalledWith('Invalid staffNumber', 403);
     });
   });
 
@@ -154,7 +154,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
     });
     it('should return a successful response with the journal when no employee ID is sent', async () => {
       process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = 'true';
@@ -168,7 +168,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
     });
     it('should return a successful response with the journal when a different employee ID is sent', async () => {
       process.env.EMPLOYEE_ID_VERIFICATION_DISABLED = 'true';
@@ -182,7 +182,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
     });
   });
 
@@ -200,7 +200,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
       moqFindJournal.verify(x => x(It.isValue('12345678'), It.isValue(1558624157000)), Times.once());
     });
     it('should parse If-Modified-Since header in any casing', async () => {
@@ -230,7 +230,7 @@ describe('getJournal handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(200);
-      expect(createResponse.default).toHaveBeenCalledWith(fakeJournal);
+      expect(response.createResponse).toHaveBeenCalledWith(fakeJournal);
       moqFindJournal.verify(x => x(It.isValue('12345678'), It.isValue(null)), Times.once());
     });
   });
