@@ -1,0 +1,19 @@
+name: Create Release tfvars
+
+on:
+  push:
+    tags:
+      - release-*
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  runs-deploy:
+    uses: dvsa/des-workflow-actions/.github/actions/service-release-tfvars/action.yaml@MES-9153-gha-release-tfvars
+    with:
+      component: 'api'
+      secrets: ${{ toJSON(secrets) }}
+
+    secrets: inherit
