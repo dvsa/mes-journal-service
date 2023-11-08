@@ -12,6 +12,8 @@ permissions:
 jobs:
   pre-creation-checks:
     runs-on: ubuntu-latest
+    outputs:
+      release_build_required: ${{ steps.pre-creation-checks.outputs.release_build_required }}
     steps:
       - uses: actions/checkout@v4
       - name: Pre Creation Checks
@@ -22,7 +24,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
 
   build-artefact-for-release:
-    if: ${{ steps.pre-creation-checks.outputs.release_build_required }}
+    if: ${{ jobs.pre-creation-checks.outputs.release_build_required }}
     uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
     with:
       component: 'api'
