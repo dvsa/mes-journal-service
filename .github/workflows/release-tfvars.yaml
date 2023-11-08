@@ -24,6 +24,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
 
   build-artefact-for-release:
+    needs: pre-creation-checks
     if: ${{ jobs.pre-creation-checks.outputs.release_build_required }}
     uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
     with:
