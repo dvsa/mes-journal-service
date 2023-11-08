@@ -10,15 +10,29 @@ permissions:
   contents: write
 
 jobs:
-  create-release-tfvars:
+  pre-creation-checks:
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📨 Checkout
-        uses: actions/checkout@v4
-
-      - name: hi
-        uses: dvsa/des-workflow-actions/.github/actions/service-release-tfvars@MES-9153-gha-release-tfvars
+      - uses: actions/checkout@v4
+      - name: Pre Creation Checks
+        id: pre-creation-checks
+        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/pre-creation-checks@MES-9153-gha-release-tfvars
         with:
           component: 'api'
           secrets: ${{ toJSON(secrets) }}
+
+  build-artefact-for-release:
+    if: ${{ steps.pre-creation-checks.outputs.release_build_required }}
+    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
+    with:
+      component: 'api'
+    secrets: inherit
+
+  create-release-tfvars:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name:
+        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-tfvars@MES-9153-gha-release-tfvars
+        with:
+          component: 'api'
