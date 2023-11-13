@@ -1,9 +1,10 @@
 import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { bootstrapLogging, debug, error, info } from '@dvsa/mes-microservice-common/application/utils/logger';
+import { bootstrapLogging, debug, error } from '@dvsa/mes-microservice-common/application/utils/logger';
 import { createResponse } from '@dvsa/mes-microservice-common/application/api/create-response';
 import { HttpStatus } from '@dvsa/mes-microservice-common/application/api/http-status';
 import { getPathParam } from '@dvsa/mes-microservice-common/framework/validation/event-validation';
+import { ExaminerRole } from '@dvsa/mes-microservice-common/domain/examiner-role';
 import {
   getRoleFromRequestContext,
   getStaffNumberFromRequestContext,
@@ -40,16 +41,10 @@ export async function handler(event: APIGatewayProxyEvent) {
 
     // check the user has sufficient permissions to search using TC id;
     const role: string | null = getRoleFromRequestContext(event.requestContext);
-    if (role !== 'LDTM' && isSearchingByTestCentre) {
+    if (role !== ExaminerRole.LDTM && isSearchingByTestCentre) {
       error('LDTM examiner role is required to search by TC id', role);
       return createResponse('LDTM examiner role is required to search by TC id', HttpStatus.UNAUTHORIZED);
     }
-
-    info(
-      isSearchingByTestCentre
-        ? `Finding test centre detail using TC ID ${testCentreID}`
-        : `Finding test centre detail for staff number ${staffNumber}`
-    );
 
     const testCentre: TestCentreDetail = (isSearchingByTestCentre)
       ? await findTestCentreDetailsByID(+testCentreID)
