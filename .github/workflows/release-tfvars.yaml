@@ -10,31 +10,32 @@ permissions:
   contents: write
 
 jobs:
-  pre-creation-checks:
+  pre_creation_checks:
     runs-on: ubuntu-latest
     outputs:
-      release_build_required: ${{ steps.pre-creation-checks.outputs.release_build_required }}
-      branch: ${{ steps.pre-creation-checks.outputs.branch }}
+      branch: ${{ steps.pre_creation_checks.outputs.branch }}
+      short_commit: ${{ steps.pre_creation_checks.outputs.short_commit }}
+      release_build_required: ${{ steps.pre_creation_checks.outputs.release_build_required }}
     steps:
       - uses: actions/checkout@v4
       - name: Pre Creation Checks
-        id: pre-creation-checks
+        id: pre_creation_checks
         uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/pre-creation-checks@MES-9153-gha-release-tfvars
         with:
           component: 'api'
           secrets: ${{ toJSON(secrets) }}
 
-  build-artefact-for-release:
-    needs: pre-creation-checks
-    if: ${{ needs.pre-creation-checks.outputs.release_build_required }}
+  build_artefact_for_release:
+    needs: pre_creation_checkss
+    if: ${{ needs.pre_creation_checks.outputs.release_build_required }}
     uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9153-gha-release-tfvars
     with:
-      branch: ${{ needs.pre-creation-checks.outputs.branch }}
+      branch: ${{ needs.pre_creation_checks.outputs.branch }}
       component: 'api'
     secrets: inherit
 
-  create-release-tfvars:
-    needs: [pre-creation-checks, build-artefact-for-release]
+  create_release_tfvars:
+    needs: [pre_creation_checks, build_artefact_for_release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -42,4 +43,5 @@ jobs:
         uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-tfvars@MES-9153-gha-release-tfvars
         with:
           component: 'api'
+          short_commit: ${{ needs.pre_creation_checks.outputs.short_commit }}
           secrets: ${{ toJSON(secrets) }}
