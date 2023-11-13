@@ -26,7 +26,7 @@ jobs:
           secrets: ${{ toJSON(secrets) }}
 
   build_artefact_for_release:
-    needs: pre_creation_checkss
+    needs: pre_creation_checks
     if: ${{ needs.pre_creation_checks.outputs.release_build_required }}
     uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9153-gha-release-tfvars
     with:
