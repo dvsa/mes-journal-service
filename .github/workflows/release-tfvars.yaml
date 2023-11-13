@@ -34,7 +34,7 @@ jobs:
     secrets: inherit
 
   create-release-tfvars:
-    needs: pre-creation-checks
+    needs: [pre-creation-checks, build-artefact-for-release]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
