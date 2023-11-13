@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       branch: ${{ steps.pre_creation_checks.outputs.branch }}
+      service_name: ${{ steps.pre_creation_checks.outputs.service_name }}
       short_commit: ${{ steps.pre_creation_checks.outputs.short_commit }}
       release_build_required: ${{ steps.pre_creation_checks.outputs.release_build_required }}
     steps:
@@ -22,7 +23,6 @@ jobs:
         id: pre_creation_checks
         uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/pre-creation-checks@MES-9153-gha-release-tfvars
         with:
-          component: 'api'
           secrets: ${{ toJSON(secrets) }}
 
   build_artefact_for_release:
@@ -42,6 +42,6 @@ jobs:
       - name: Create Release tfvars
         uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-tfvars@MES-9153-gha-release-tfvars
         with:
-          component: 'api'
+          service_name: ${{ needs.pre_creation_checks.outputs.service_name }}
           short_commit: ${{ needs.pre_creation_checks.outputs.short_commit }}
           secrets: ${{ toJSON(secrets) }}
