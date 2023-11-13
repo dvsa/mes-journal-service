@@ -14,6 +14,7 @@ import {
   incorrectStaffNumber,
   resultTestSlot,
 } from './handler.spec.data';
+import {HttpStatus} from '@dvsa/mes-microservice-common/application/api/http-status';
 
 describe('searchBooking handler', () => {
   let dummyApigwEvent: APIGatewayEvent;
@@ -24,7 +25,7 @@ describe('searchBooking handler', () => {
   beforeEach(() => {
     moqFindJournal.reset();
 
-    createResponseSpy = spyOn(response, 'createResponse');
+    createResponseSpy = spyOn(response, 'createResponse').and.callThrough();
     dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
       pathParameters: {
         staffNumber: '12345678',
@@ -96,7 +97,9 @@ describe('searchBooking handler', () => {
       };
 
       moqFindJournal
-        .setup(x => x(It.isValue(correctStaffNumber), It.isAny())).returns(() => Promise.resolve(findJournalResult));
+        .setup(x => x(It.isValue(correctStaffNumber), It.isAny()))
+        .returns(() => Promise.resolve(findJournalResult));
+
       createResponseSpy.and.returnValue({ statusCode: 404 });
       const resp = await handler(dummyApigwEvent);
 
@@ -193,6 +196,21 @@ describe('searchBooking handler', () => {
       const resp = await handler(dummyApigwEvent);
 
       expect(resp.statusCode).toBe(400);
+    });
+  });
+
+  describe('400', () => {
+    it('should be throw a query params error', async () => {
+      dummyApigwEvent.queryStringParameters = null;
+      const resp = await handler(dummyApigwEvent);
+      expect(resp.statusCode).toEqual(HttpStatus.BAD_REQUEST);
+      expect(resp.body).toEqual(JSON.stringify('Query parameters have to be supplied'));
+    });
+    it('should be thrown if staffNumber is not defined via path params', async () => {
+      dummyApigwEvent.pathParameters = { staffNumber: undefined };
+      const resp = await handler(dummyApigwEvent);
+      expect(resp.statusCode).toEqual(HttpStatus.BAD_REQUEST);
+      expect(resp.body).toEqual(JSON.stringify('Path parameter staff number has to be supplied'));
     });
   });
 

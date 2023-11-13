@@ -1,6 +1,6 @@
 import { DynamoDBClient, DynamoDBClientConfig} from '@aws-sdk/client-dynamodb';
 import { warn } from '@dvsa/mes-microservice-common/application/utils/logger';
-import { fromIni } from '@aws-sdk/credential-providers';
+import { fromEnv, fromIni } from '@aws-sdk/credential-providers';
 import { GetCommand, ScanCommand } from '@aws-sdk/lib-dynamodb';
 import { TestCentreDetail } from '../../domain/TestCentreDetailRecord';
 
@@ -12,16 +12,17 @@ const createDynamoClient = () => {
     opts.credentials = fromIni();
   } else if (process.env.IS_OFFLINE === 'true') {
     warn('Using SLS offline');
+    opts.credentials = fromEnv();
     opts.endpoint = process.env.DDB_OFFLINE_ENDPOINT;
   }
 
   return new DynamoDBClient(opts);
 };
 
-const ddb = createDynamoClient();
-const tableName = getTestCentreTableName();
-
 export async function getTestCentreByStaffNumber(staffNumber: string): Promise<TestCentreDetail | null> {
+  const ddb = createDynamoClient();
+  const tableName = getTestCentreTableName();
+
   const response = await ddb.send(
     new GetCommand({
       TableName: tableName,
@@ -37,6 +38,9 @@ export async function getTestCentreByStaffNumber(staffNumber: string): Promise<T
 }
 
 export async function getTestCentreByID(tcID: number): Promise<TestCentreDetail[] | null> {
+  const ddb = createDynamoClient();
+  const tableName = getTestCentreTableName();
+
   const response = await ddb.send(
     new ScanCommand({
       TableName: tableName,

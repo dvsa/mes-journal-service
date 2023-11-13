@@ -3,7 +3,7 @@ import {ApplicationReference} from '@dvsa/mes-test-schema/categories/common';
 import {formatApplicationReference} from '@dvsa/mes-microservice-common/domain/tars';
 import {TestSlot} from '@dvsa/mes-journal-schema';
 
-export const formatTestSlots = (testSlots: TestSlot[], parameterAppRef: number) => {
+export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: number) => {
   return testSlots.map((testSlot) => {
     if (get(testSlot, 'booking.application', null)) {
       const application = get(testSlot, 'booking.application', null);

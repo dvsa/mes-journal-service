@@ -18,9 +18,11 @@ export async function findJournal(
   modifiedSinceTimestamp: number | null,
 ): Promise<ExaminerWorkSchedule | null> {
   const journalRecord = await getJournal(staffNumber);
+
   if (!journalRecord) {
     throw new JournalNotFoundError();
   }
+
   if (journalNotModifiedSince(journalRecord, modifiedSinceTimestamp)) {
     return null;
   }
