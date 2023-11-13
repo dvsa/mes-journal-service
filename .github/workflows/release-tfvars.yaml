@@ -36,6 +36,7 @@ jobs:
 
   create_release_tfvars:
     needs: [pre_creation_checks, build_artefact_for_release]
+    if: ${{ needs.build_artefact_for_release.result == 'success' || needs.build_artefact_for_release.result == 'skipped' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
