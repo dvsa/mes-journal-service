@@ -1,4 +1,4 @@
-name: Create Release tfvars
+name: Create Release Manifest
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
       component: 'api'
     secrets: inherit
 
-  create_release_tfvars:
+  create_release_manifest:
     needs: [pre_creation_checks, build_artefact_for_release]
     if: |
       always() &&
@@ -42,8 +42,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Create Release tfvars
-        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-tfvars@MES-9153-gha-release-tfvars
+      - name: Create Release Manifest
+        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-manifest@MES-9153-gha-release-tfvars
         with:
           service_name: ${{ needs.pre_creation_checks.outputs.service_name }}
           short_commit: ${{ needs.pre_creation_checks.outputs.short_commit }}
