@@ -9,42 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  pre_creation_checks:
-    runs-on: ubuntu-latest
-    outputs:
-      branch: ${{ steps.pre_creation_checks.outputs.branch }}
-      service_name: ${{ steps.pre_creation_checks.outputs.service_name }}
-      short_commit: ${{ steps.pre_creation_checks.outputs.short_commit }}
-      release_build_required: ${{ steps.pre_creation_checks.outputs.release_build_required }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Pre Creation Checks
-        id: pre_creation_checks
-        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/pre-creation-checks@MES-9153-gha-release-tfvars
-        with:
-          secrets: ${{ toJSON(secrets) }}
-
-  build_artefact_for_release:
-    needs: pre_creation_checks
-    if: ${{ needs.pre_creation_checks.outputs.release_build_required }}
-    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9153-gha-release-tfvars
+  release-manifest:
+    uses: dvsa/des-workflow-actions/.github/workflows/release-manifest.yaml@MES-9153-gha-release-tfvars
     with:
-      branch: ${{ needs.pre_creation_checks.outputs.branch }}
       component: 'api'
     secrets: inherit
-
-  create_release_manifest:
-    needs: [pre_creation_checks, build_artefact_for_release]
-    if: |
-      always() &&
-      needs.pre_creation_checks.result == 'success' &&
-      (needs.build_artefact_for_release.result == 'success' || needs.build_artefact_for_release.result == 'skipped')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create Release Manifest
-        uses: dvsa/des-workflow-actions/.github/actions/create-release-tfvars/create-service-release-manifest@MES-9153-gha-release-tfvars
-        with:
-          service_name: ${{ needs.pre_creation_checks.outputs.service_name }}
-          short_commit: ${{ needs.pre_creation_checks.outputs.short_commit }}
-          secrets: ${{ toJSON(secrets) }}
