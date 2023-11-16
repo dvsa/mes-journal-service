@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   runs-deploy:
-    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@MES-9153-gha-release-tfvars
+    uses: dvsa/des-workflow-actions/.github/workflows/deploy-backend.yaml@main
     with:
       component: 'api'
     secrets: inherit
