@@ -25,7 +25,8 @@
     "test": "npm run compile && jasmine",
     "test:jasmine-coverage": "nyc npm run test",
     "test:int": "npm run compile && jasmine build/spec/journal.spec.js",
-    "vulnerability-check": "snyk test --severity-threshold=high"
+    "vulnerability-check": "snyk test --severity-threshold=high",
+    "sonar-scanner": "node_modules/sonar-scanner/bin/sonar-scanner"
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.435.0",
@@ -63,6 +64,7 @@
     "serverless-offline": "^13.2.0",
     "serverless-webpack": "^5.13.0",
     "snyk": "^1.1236.0",
+    "sonar-scanner": "^3.1.0",
     "source-map-support": "^0.5.21",
     "supertest": "^6.3.3",
     "ts-loader": "^9.5.0",
