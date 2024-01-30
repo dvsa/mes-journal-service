@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   release-manifest:
-    uses: dvsa/des-workflow-actions/.github/workflows/release-manifest.yaml@main
+    uses: dvsa/des-workflow-actions/.github/workflows/release-manifest.yaml@MES-9153-gha-release-tfvars
     with:
       component: 'api'
     secrets: inherit
