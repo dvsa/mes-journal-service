@@ -1,16 +1,16 @@
-import {APIGatewayProxyEvent} from 'aws-lambda';
-import {get} from 'lodash';
-import {ExaminerWorkSchedule} from '@dvsa/mes-journal-schema';
-import {formatApplicationReference} from '@dvsa/mes-microservice-common/domain/tars';
-import {getPathParam} from '@dvsa/mes-microservice-common/framework/validation/event-validation';
-import {bootstrapLogging, debug, error} from '@dvsa/mes-microservice-common/application/utils/logger';
-import {HttpStatus} from '@dvsa/mes-microservice-common/application/api/http-status';
-import {createResponse} from '@dvsa/mes-microservice-common/application/api/create-response';
-import {findJournal} from '../../../common/application/journal/FindJournal';
-import {BookingValidator} from '../application/validation/validation';
-import {parseToAppRef} from '../application/helpers/parse-to-app-ref';
-import {formatTestSlots} from '../application/helpers/format-test-slots';
-import {compress} from '../../../common/application/service/journal-decompressor';
+import { APIGatewayProxyEvent } from 'aws-lambda';
+import { get } from 'lodash';
+import { ExaminerWorkSchedule } from '@dvsa/mes-journal-schema';
+import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
+import { getPathParam } from '@dvsa/mes-microservice-common/framework/validation/event-validation';
+import { bootstrapLogging, debug, error, warn } from '@dvsa/mes-microservice-common/application/utils/logger';
+import { HttpStatus } from '@dvsa/mes-microservice-common/application/api/http-status';
+import { createResponse } from '@dvsa/mes-microservice-common/application/api/create-response';
+import { findJournal } from '../../../common/application/journal/FindJournal';
+import { BookingValidator } from '../application/validation/validation';
+import { parseToAppRef } from '../application/helpers/parse-to-app-ref';
+import { formatTestSlots } from '../application/helpers/format-test-slots';
+import { compress } from '../../../common/application/service/journal-decompressor';
 
 export async function handler(event: APIGatewayProxyEvent) {
   bootstrapLogging('search-booking', event);
@@ -55,10 +55,8 @@ export async function handler(event: APIGatewayProxyEvent) {
 
   const testSlots = formatTestSlots(journal?.testSlots, parameterAppRef);
   if (testSlots.length === 0) {
-    error('Test slots are empty');
-    // @TODO: Response should be changed to
-    //  return createResponse('No test slot found', HttpStatus.NOT_FOUND);
-    return createResponse(404);
+    warn('Test slots are empty');
+    return createResponse('No test slot found', HttpStatus.NOT_FOUND);
   }
 
   if (testSlots.length > 1) {
