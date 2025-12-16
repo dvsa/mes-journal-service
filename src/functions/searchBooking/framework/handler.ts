@@ -53,10 +53,15 @@ export async function handler(event: APIGatewayProxyEvent) {
 
   const parameterAppRef: number = formatApplicationReference(parseToAppRef(applicationReference));
 
-  const testSlots = formatTestSlots(journal?.testSlots, parameterAppRef);
+  // If the app ref is not a number (a dsp booking id),
+  // pass it in as it is, otherwise, pass in the new, formatted app ref
+  const testSlots = formatTestSlots(
+    journal?.testSlots,
+    isNaN(parameterAppRef) ? applicationReference : parameterAppRef
+  );
   if (testSlots.length === 0) {
-    warn('Test slots are empty');
-    return createResponse('No test slot found', HttpStatus.NOT_FOUND);
+    warn(`Test slots are empty for staffNumber ${staffNumber} and appRef ${applicationReference}`);
+    return createResponse(`No test slot found for ${parameterAppRef}` , HttpStatus.NOT_FOUND);
   }
 
   if (testSlots.length > 1) {

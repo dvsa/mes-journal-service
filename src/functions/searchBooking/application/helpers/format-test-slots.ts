@@ -3,10 +3,12 @@ import {ApplicationReference} from '@dvsa/mes-test-schema/categories/common';
 import {formatApplicationReference} from '@dvsa/mes-microservice-common/domain/tars';
 import {TestSlot} from '@dvsa/mes-journal-schema';
 
-export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: number) => {
+export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: number | string) => {
   return testSlots.map((testSlot) => {
     if (get(testSlot, 'booking.application', null)) {
       const application = get(testSlot, 'booking.application', null);
+      // Get the booking id (only present on DSP bookings)
+      const bookingId = application?.bookingId;
       const currentAppRef: ApplicationReference = {
         applicationId: application?.applicationId || 0,
         checkDigit: application?.checkDigit || 0,
@@ -14,7 +16,8 @@ export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: num
       };
 
       const formattedSlotAppRef = formatApplicationReference(currentAppRef);
-      if (parameterAppRef === formattedSlotAppRef) {
+      // If we have a booking id to use for the comparison, use it
+      if (bookingId ? (bookingId === parameterAppRef) : (parameterAppRef === formattedSlotAppRef)) {
         return testSlot;
       }
     }
