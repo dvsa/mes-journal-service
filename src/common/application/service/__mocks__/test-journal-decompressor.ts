@@ -1,4 +1,4 @@
-import { VehicleGearbox, Initiator } from '@dvsa/mes-journal-schema';
+import { VehicleGearbox, Initiator, ExaminerWorkSchedule, TestSlot } from '@dvsa/mes-journal-schema';
 
 export default {
   journal: {
@@ -49,10 +49,9 @@ export default {
           centreName: 'Example Test Centre',
           costCode: 'EXTC1',
         },
-        vehicleSlotType: 'B57mins',
       },
-    ],
-  },
+    ] as TestSlot[],
+  } as ExaminerWorkSchedule,
   // eslint-disable-next-line
-  compressedJournalAsBase64: Buffer.from('H4sIALSHEF0AA11TTW/jIBD9K4jruhI4cZP45jrZD2k3Wm1yWKnqgcAkQcXgBZwmqvrfd7DdKO3FwHuPYebN+JVGCHFjXAy0fHylO+eetT3Q8pWKtjVaiqid/XT8oWjJ88m0uJ9l7zc28K8DK4GWk4zKI8jnpT7oiMKMgo06GmhwrRNDy70wAZA4R7AK1BZzuIKtdwcPIegTVFLi5sqEFqQWZg2gEKS1sEorEYEcRSDqEgyctaBZX1KN+MH5C+oqjtgJjloa+AbC79w5oV10DZYjkXwBE443SbxhCe/BU+3XQ6WU7zNCP4btT22BYzhONrE3B1cPEDHqjSJHxcY10BqBFn2gJiMV3YtFpnUhSqcgZfjAczKpl/Q2nd57xm+QtWj6JPfahzgc6FfjfN+NjBpxRX9j8cGlV/p+IPJLYzEYXnl026+7Zgc+CVfVnw3jRZ6zarH4XuONxu20gS0YaI/Oprtsdl9MyTAHKXGvG+EvHxSJJDgl8wVDRQDprPqsmU5yTthijtFSJq2Hk3ZdwOZKMGYcv0dayUjcnlgROw/0CZUBh3YJUWiTqledH7XFbOAGp5JVIQqPraU54/M7nt9xtmVz5ErGvrD0TQ/3Q4MT6oeO97sUokgJZiMwGrk6i6Y1QNLIkPESSrB19dC61d9tzVPUcezSD7a9tIl6KGaNtuj609t/w2rzvX0DAAA=', 'base64'),
+  compressedJournalAsBase64: Buffer.from('H4sIAAAAAAAAA11STW/iMBD9K5avm0p2gAK5ZQP7Ie2i1cKhUtWDsQew6thZ26EgxH/fcZIi2ktiv/dm/ObjQiOEuDYuBlo8X+jWuVdt97S4UNE0RksRtbOfrj8VLXg+Gk8ep9l7xBr+tWAl0GKUUXkA+brQex1RmFGwUUcDNf6rxNBiJ0wAJE4RrAK1QQ83sPFu7yEEfYRSSjzcmNCA1MKsABSCtBJWaSUikIMIRJ2DgZMWNOtKqhDfO39GXckRO8JBSwPfQfitOyW0ja7GciSSb2DC4c7EFUt4T55qv11KpXznCPvRH39pCxzTcbKOXXPw7wEiZr1T5KhYuxoaI7BFH6jRQEX3ZpFpXIjSKUgOv/KcjKoFvbfT9Z7xO2Ql6s7kTvsQ+wv9ZpzvppFRI27oHyw+uPRKNw9EfmssBtMrj932q7begk/CZfl3zfgkz1k5n/+oMKJ2W21gAwaag7Mplk0fJ2PS70Ey7nUt/PmDIpEEt2Q2Z6gIIJ1VnzXjUc4Jm88wW3LSeDhq1wYcrgRjhvV7pqWMxO2IFbH1QF9QGXBpFxCFNql61fpBO5n2XN+p1KoQhcfR0pzx2QPPHzjbsBlyBWNfWPqmh7ulwQ31/cS7U0oxSQazARgauTyJujFA0sqQIQglOLqqH93yaVNxer2+XP8DN5PpE2EDAAA=', 'base64'),
 };
