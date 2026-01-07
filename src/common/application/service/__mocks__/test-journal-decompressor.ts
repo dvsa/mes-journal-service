@@ -1,4 +1,4 @@
-import {VehicleGearbox, Initiator, ExaminerWorkSchedule, TestSlot} from '@dvsa/mes-journal-schema';
+import { VehicleGearbox, Initiator, ExaminerWorkSchedule, TestSlot } from '@dvsa/mes-journal-schema';
 
 export default {
   journal: {
