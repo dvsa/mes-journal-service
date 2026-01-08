@@ -1,5 +1,5 @@
-import {formatApplicationReference} from '@dvsa/mes-microservice-common/domain/tars';
-import {TestSlot} from '@dvsa/mes-journal-schema';
+import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
+import { TestSlot } from '@dvsa/mes-journal-schema';
 
 export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: string) =>
   testSlots.filter((slot) => {
