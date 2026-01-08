@@ -51,11 +51,8 @@ export async function handler(event: APIGatewayProxyEvent) {
     return createResponse('Unable to get journal, please check the staff number', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  // If the app ref follows the DSP format, do not transform it
-  const parameterAppRef: string = Number.isNaN(+applicationReference) ?
-    applicationReference : formatApplicationReference(parseToAppRef(applicationReference)).toString();
+  const testSlots = formatTestSlots(journal?.testSlots, applicationReference);
 
-  const testSlots = formatTestSlots(journal?.testSlots, parameterAppRef);
   if (testSlots.length === 0) {
     warn('Test slots are empty');
     return createResponse('No test slot found', HttpStatus.NOT_FOUND);

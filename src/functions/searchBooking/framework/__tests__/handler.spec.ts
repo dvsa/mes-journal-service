@@ -14,7 +14,7 @@ import {
   incorrectStaffNumber,
   resultTestSlot,
 } from './handler.spec.data';
-import {HttpStatus} from '@dvsa/mes-microservice-common/application/api/http-status';
+import { HttpStatus } from '@dvsa/mes-microservice-common/application/api/http-status';
 
 describe('searchBooking handler', () => {
   let dummyApigwEvent: APIGatewayEvent;
