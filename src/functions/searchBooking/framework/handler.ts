@@ -51,9 +51,8 @@ export async function handler(event: APIGatewayProxyEvent) {
     return createResponse('Unable to get journal, please check the staff number', HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  const parameterAppRef: number = formatApplicationReference(parseToAppRef(applicationReference));
+  const testSlots = formatTestSlots(journal?.testSlots, applicationReference);
 
-  const testSlots = formatTestSlots(journal?.testSlots, parameterAppRef);
   if (testSlots.length === 0) {
     warn('Test slots are empty');
     return createResponse('No test slot found', HttpStatus.NOT_FOUND);

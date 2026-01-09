@@ -1,22 +1,19 @@
-import {get} from 'lodash';
-import {ApplicationReference} from '@dvsa/mes-test-schema/categories/common';
-import {formatApplicationReference} from '@dvsa/mes-microservice-common/domain/tars';
-import {TestSlot} from '@dvsa/mes-journal-schema';
+import { formatApplicationReference } from '@dvsa/mes-microservice-common/domain/tars';
+import { TestSlot } from '@dvsa/mes-journal-schema';
 
-export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: number) => {
-  return testSlots.map((testSlot) => {
-    if (get(testSlot, 'booking.application', null)) {
-      const application = get(testSlot, 'booking.application', null);
-      const currentAppRef: ApplicationReference = {
-        applicationId: application?.applicationId || 0,
-        checkDigit: application?.checkDigit || 0,
-        bookingSequence: application?.bookingSequence || 0,
-      };
+export const formatTestSlots = (testSlots: TestSlot[] = [], parameterAppRef: string) =>
+  testSlots.filter((slot) => {
+    const application = slot?.booking?.application;
+    if (!application) return false;
 
-      const formattedSlotAppRef = formatApplicationReference(currentAppRef);
-      if (parameterAppRef === formattedSlotAppRef) {
-        return testSlot;
-      }
-    }
-  }).filter(testSlot => testSlot);
-};
+    // Use the DSP bookingReference field if it exists, otherwise format the TARS data into a string
+    const formattedSlotAppRef =
+          application.bookingReference ||
+          formatApplicationReference({
+            applicationId: application.applicationId || 0,
+            checkDigit: application.checkDigit || 0,
+            bookingSequence: application.bookingSequence || 0,
+          }).toString();
+
+    return formattedSlotAppRef === parameterAppRef;
+  });
