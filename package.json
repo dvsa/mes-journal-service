@@ -33,7 +33,7 @@
     "@aws-sdk/lib-dynamodb": "^3.974.0",
     "@dvsa/mes-microservice-common": "1.2.1",
     "joi": "^18.0.1",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "moment": "^2.30.1"
   },
   "devDependencies": {
