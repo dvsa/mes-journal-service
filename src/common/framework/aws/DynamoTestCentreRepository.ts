@@ -41,19 +41,27 @@ export async function getTestCentreByID(tcID: number): Promise<TestCentreDetail[
   const ddb = createDynamoClient();
   const tableName = getTestCentreTableName();
 
-  const response = await ddb.send(
-    new ScanCommand({
-      TableName: tableName,
-      FilterExpression: 'contains (testCentreIDs, :tcID)',
-      ExpressionAttributeValues : { ':tcID' : tcID },
-    })
-  );
+  const allItems: Record<string, unknown>[] = [];
+  let lastEvaluatedKey: Record<string, unknown> | undefined;
 
-  if (response?.Items === undefined || response?.Items?.length === 0) {
-    return null;
-  }
+  do {
+    const response = await ddb.send(
+      new ScanCommand({
+        TableName: tableName,
+        FilterExpression: 'contains(testCentreIDs, :tcID)',
+        ExpressionAttributeValues: { ':tcID': tcID },
+        ExclusiveStartKey: lastEvaluatedKey,
+      })
+    );
 
-  return response?.Items as TestCentreDetail[];
+    if (response.Items) {
+      allItems.push(...response.Items);
+    }
+
+    lastEvaluatedKey = response.LastEvaluatedKey as Record<string, unknown> | undefined;
+  } while (lastEvaluatedKey !== undefined);
+
+  return allItems.length === 0 ? null : allItems as unknown as TestCentreDetail[];
 }
 
 function getTestCentreTableName(): string {
