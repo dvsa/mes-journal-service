@@ -8,14 +8,14 @@ export type Examiner = {
 };
 
 export type TestCentre = {
-  id: number;
+  costCode: string;
   name: string;
 };
 
 export interface TestCentreDetail {
   staffNumber: string;
   examiners: Examiner[];
-  testCentreIDs: number[];
+  testCentreCostCodes: string[];
 }
 
 export interface TestCentreDetailResponse {

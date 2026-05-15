@@ -6,7 +6,7 @@
       {"name": "Exam 2", "staffNumber": "2345669"},
       {"name": "Exam 3", "staffNumber": "4654234"}
     ],
-    "testCentreIDs": [1234]
+    "testCentreCostCodes": ["1234"]
   },
   {
     "staffNumber": "2345669",
@@ -15,7 +15,7 @@
       {"name": "Exam 2", "staffNumber": "2345669"},
       {"name": "Exam 3", "staffNumber": "4654234"}
     ],
-    "testCentreIDs": [1234]
+    "testCentreCostCodes": ["1234"]
   },
   {
     "staffNumber": "4654234",
@@ -24,7 +24,7 @@
       {"name": "Exam 2", "staffNumber": "2345669"},
       {"name": "Exam 3", "staffNumber": "4654234"}
     ],
-    "testCentreIDs": [1234]
+    "testCentreCostCodes": ["1234"]
   },
   {
     "staffNumber": "5637892",
@@ -32,7 +32,7 @@
       {"name": "Exam 4", "staffNumber": "5637892"},
       {"name": "Exam 5", "staffNumber": "8902402"}
     ],
-    "testCentreIDs": [3022, 2388]
+    "testCentreCostCodes": ["3022", "2388"]
   },
   {
     "staffNumber": "8902402",
@@ -40,6 +40,6 @@
       {"name": "Exam 4", "staffNumber": "5637892"},
       {"name": "Exam 5", "staffNumber": "8902402"}
     ],
-    "testCentreIDs": [3022, 2388]
+    "testCentreCostCodes": ["3022", "2388"]
   }
 ]

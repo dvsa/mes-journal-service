@@ -10,7 +10,7 @@ import { TestSlot } from '@dvsa/mes-journal-schema';
 
 describe('constructResponseArray', () => {
   // eslint-disable-next-line
-  it('should filter the examiner work schedules by testCentreID and date, returning errors if journals not found', () => {
+  it('should filter the examiner work schedules by testCentreCostCode and date, returning errors if journals not found', () => {
     const response: TestCentreDetailResponse = constructResponseArray(
       mockTestCentreDetailFromDynamo,
       mockExaminerWorkSchedulesOrEmpty,
@@ -38,22 +38,22 @@ describe('constructResponseArray', () => {
             testSlots: [
               {
                 slotDetail: { start: `${today}T12:00:00` },
-                testCentre: { centreId: 1234, centreName: 'Swansea' },
+                testCentre: { costCode: '1234', centreName: 'Swansea' },
                 booking: { application: { testCategory: TestCategory.BE } },
               },
               {
                 slotDetail: { start: `${today}T13:00:00` },
-                testCentre: { centreId: 1234, centreName: 'Swansea' },
+                testCentre: { costCode: '1234', centreName: 'Swansea' },
                 booking: { application: { testCategory: TestCategory.B } },
               },
               {
                 slotDetail: { start: `${today}T14:00:00` },
-                testCentre: { centreId: 1234, centreName: 'Swansea' },
+                testCentre: { costCode: '1234', centreName: 'Swansea' },
                 booking: { application: { testCategory: TestCategory.ADI2 } },
               },
               {
                 slotDetail: { start: `${tomorrow}T12:00:00` },
-                testCentre: { centreId: 1289, centreName: 'Neath' },
+                testCentre: { costCode: '1289', centreName: 'Neath' },
                 booking: { application: { testCategory: TestCategory.C } },
               },
             ],
@@ -72,8 +72,8 @@ describe('constructResponseArray', () => {
         },
       ],
       testCentres: [
-        { name: 'Swansea', id: 1234 },
-        { name: 'Neath', id: 1289 },
+        { name: 'Swansea', costCode: '1234' },
+        { name: 'Neath', costCode: '1289' },
       ],
     } as TestCentreDetailResponse);
   });

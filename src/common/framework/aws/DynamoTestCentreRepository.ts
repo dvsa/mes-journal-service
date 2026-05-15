@@ -40,10 +40,10 @@ export async function getTestCentreByStaffNumber(staffNumber: string): Promise<T
 
 /**
  * Performs a full scan of a DynamoDB table and retrieves all items before filtering for test centre.
- * @param tcID - Test Centre Id to filter results.
+ * @param costCode - Test Centre cost code to filter results.
  */
-export const getTestCentreByID = async <T>(
-  tcID: number,
+export const getTestCentreByCostCode = async <T>(
+  costCode: string,
 ): Promise<null | T[]> => {
   const ddb = createDynamoClient();
   const tableName = getTestCentreTableName();
@@ -53,8 +53,8 @@ export const getTestCentreByID = async <T>(
 
   const params = {
     TableName: tableName,
-    FilterExpression: 'contains(testCentreIDs, :tcID)',
-    ExpressionAttributeValues: { ':tcID': tcID },
+    FilterExpression: 'contains(testCentreCostCodes, :costCode)',
+    ExpressionAttributeValues: { ':costCode': costCode },
     ExclusiveStartKey: lastEvaluatedKey,
   } as ScanCommandInput;
 

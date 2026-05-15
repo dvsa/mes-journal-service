@@ -5,9 +5,9 @@ export class TestCentreNotFoundError extends Error {
   }
 }
 
-export class TestCentreIdNotFoundError extends Error {
+export class TestCentreCostCodeNotFoundError extends Error {
   constructor() {
     super();
-    Object.setPrototypeOf(this, TestCentreIdNotFoundError.prototype);
+    Object.setPrototypeOf(this, TestCentreCostCodeNotFoundError.prototype);
   }
 }

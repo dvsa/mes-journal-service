@@ -28,7 +28,7 @@ export const constructResponseArray = (
       journal: assignJournalToStaff(testCentreDetail, examiner, journals),
       error: deriveError(journals, index),
     })),
-    testCentres: uniqBy(testCentres, 'id'), // make test centre list distinct by id
+    testCentres: uniqBy(testCentres, 'costCode'), // make test centre list distinct by costCode
   };
 };
 
@@ -72,9 +72,9 @@ const filterByTestCentreAndDate = <T>(testCentreDetail: TestCentreDetail, info: 
     const sec = section as Section;
     return (
       sec.testCentre &&
-      isAnyOf(sec.testCentre.centreId, testCentreDetail.testCentreIDs) &&
+      isAnyOf(sec.testCentre.costCode, testCentreDetail.testCentreCostCodes) &&
       inNext2Days(get(sec, 'slotDetail.start', '')) &&
-      testCentres.push({ name: sec.testCentre.centreName, id: sec.testCentre.centreId } as TestCentre)
+      testCentres.push({ name: sec.testCentre.centreName, costCode: sec.testCentre.costCode } as TestCentre)
     );
   });
 };

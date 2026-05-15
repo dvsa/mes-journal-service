@@ -8,8 +8,8 @@ export const formatExaminers = (testCentreDetails: TestCentreDetail[]) => uniqBy
   'staffNumber'
 ) as Examiner[];
 
-export const buildTestCentre = (examiners: Examiner[], testCentreID: number): TestCentreDetail => ({
+export const buildTestCentre = (examiners: Examiner[], testCentreCostCode: string): TestCentreDetail => ({
   staffNumber: '',
   examiners,
-  testCentreIDs: [+testCentreID],
+  testCentreCostCodes: [testCentreCostCode],
 });
