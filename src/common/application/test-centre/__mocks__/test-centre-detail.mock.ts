@@ -17,7 +17,7 @@ const MOCK_EXAMINERS = [
 export const MOCK_TEST_CENTRE_DETAIL_1 = {
   staffNumber: '1234567',
   examiners: MOCK_EXAMINERS,
-  testCentreIDs: [123, 456],
+  testCentreCostCodes: ['123', '456'],
 } as TestCentreDetail;
 
 export const MOCK_TEST_CENTRE_DETAIL_2 = {
@@ -30,7 +30,7 @@ export const MOCK_TEST_CENTRE_DETAIL_2 = {
       journal: {} as ExaminerWorkSchedule,
     },
   ],
-  testCentreIDs: [123, 456],
+  testCentreCostCodes: ['123', '456'],
 } as TestCentreDetail;
 
 export const MOCK_TEST_CENTRE_DETAIL_RESPONSES = [

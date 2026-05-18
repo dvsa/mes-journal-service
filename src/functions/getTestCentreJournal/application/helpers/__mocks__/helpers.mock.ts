@@ -13,7 +13,7 @@ export const mockTestCentreDetailFromDynamo = {
     { name: 'User name', staffNumber: '123456' },
     { name: 'Another name', staffNumber: '543789' },
   ],
-  testCentreIDs: [1234, 1289],
+  testCentreCostCodes: ['1234', '1289'],
 } as TestCentreDetail;
 
 // date needs to be passed in YYYY-MM-DD
@@ -33,26 +33,26 @@ export const mockExaminerWorkSchedule = (date: string) => {
     testSlots: [
       {
         slotDetail: { start: `${todayFormatted}T12:00:00` },
-        testCentre: { centreId: 2435, centreName: 'Neath' },
+        testCentre: { costCode: '2435', centreName: 'Neath' },
       },
       {
         slotDetail: { start: `${todayFormatted}T12:00:00` },
-        testCentre: { centreId: 1234, centreName: 'Swansea' },
+        testCentre: { costCode: '1234', centreName: 'Swansea' },
         booking: { application: { testCategory: TestCategory.BE } },
       },
       {
         slotDetail: { start: `${todayFormatted}T13:00:00` },
-        testCentre: { centreId: 1234, centreName: 'Swansea' },
+        testCentre: { costCode: '1234', centreName: 'Swansea' },
         booking: { application: { testCategory: TestCategory.B } },
       },
       {
         slotDetail: { start: `${todayFormatted}T14:00:00` },
-        testCentre: { centreId: 1234, centreName: 'Swansea' },
+        testCentre: { costCode: '1234', centreName: 'Swansea' },
         booking: { application: { testCategory: TestCategory.ADI2 } },
       },
       {
         slotDetail: { start: `${dayAfterTomorrowFormatted}T12:00:00` },
-        testCentre: { centreId: 1234, centreName: 'Swansea' },
+        testCentre: { costCode: '1234', centreName: 'Swansea' },
         booking: { application: { testCategory: TestCategory.C } },
       },
       {
@@ -61,11 +61,11 @@ export const mockExaminerWorkSchedule = (date: string) => {
       },
       {
         slotDetail: { start: `${todayFormatted}T12:00:00` },
-        testCentre: { centreId: 5323, centreName: 'Cardiff' },
+        testCentre: { costCode: '5323', centreName: 'Cardiff' },
       },
       {
         slotDetail: { start: `${tomorrowFormatted}T12:00:00` },
-        testCentre: { centreId: 1289, centreName: 'Neath' },
+        testCentre: { costCode: '1289', centreName: 'Neath' },
         booking: { application: { testCategory: TestCategory.C } },
       },
     ],

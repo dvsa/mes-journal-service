@@ -21,6 +21,6 @@ export const getTestCentreJournalPayload = async (
   customMetric('TestCentreDetailFound', 'Number of populated responses sent (HTTP 200)');
 
   // last step is to merge the journals data with the testCentre object to assign journals to each examiner and
-  // to filter by testCentreID
+  // to filter by testCentreCostCode
   return constructResponseArray(testCentreDetail, journals) as TestCentreDetailResponse;
 };

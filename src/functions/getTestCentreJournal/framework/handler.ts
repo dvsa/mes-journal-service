@@ -13,11 +13,11 @@ import {
 import { findTestCentreDetail } from '../../../common/application/test-centre/FindTestCentreByStaffNumber';
 import {TestCentreDetail} from '../../../common/domain/TestCentreDetailRecord';
 import {
-  TestCentreIdNotFoundError,
+  TestCentreCostCodeNotFoundError,
   TestCentreNotFoundError,
 } from '../../../common/domain/errors/test-centre-not-found-error';
 import { getTestCentreJournalPayload } from '../../../common/application/test-centre/determine-response-payload';
-import { findTestCentreDetailsByID } from '../../../common/application/test-centre/FindTestCentreByID';
+import { findTestCentreDetailsByCostCode } from '../../../common/application/test-centre/FindTestCentreByCostCode';
 
 export type ExaminerWorkScheduleOrEmpty = ExaminerWorkSchedule | { error: string };
 
@@ -34,20 +34,22 @@ export async function handler(event: APIGatewayProxyEvent) {
     debug('Staff number found in request context', staffNumber);
 
     // extract the test centre id from the path params if it exists;
-    const testCentreID = getPathParam(event.pathParameters, 'testCentreId');
+    const testCentreCostCode = getPathParam(event.pathParameters, 'testCentreId');
+
+    error('path params', event.pathParameters);
 
     // check for the existence of testCentre in path param to determine the type of request;
-    const isSearchingByTestCentre = !!testCentreID;
+    const isSearchingByTestCentre = !!testCentreCostCode;
 
     // check the user has sufficient permissions to search using TC id;
     const role: string | null = getRoleFromRequestContext(event.requestContext);
     if (role !== ExaminerRole.LDTM && isSearchingByTestCentre) {
-      error('LDTM examiner role is required to search by TC id', role);
-      return createResponse('LDTM examiner role is required to search by TC id', HttpStatus.UNAUTHORIZED);
+      error('LDTM examiner role is required to search by TC cost code', role);
+      return createResponse('LDTM examiner role is required to search by TC cost code', HttpStatus.UNAUTHORIZED);
     }
 
     const testCentre: TestCentreDetail = (isSearchingByTestCentre)
-      ? await findTestCentreDetailsByID(+testCentreID)
+      ? await findTestCentreDetailsByCostCode(testCentreCostCode)
       : await findTestCentreDetail(staffNumber);
 
     const result = await getTestCentreJournalPayload(testCentre);
@@ -59,9 +61,9 @@ export async function handler(event: APIGatewayProxyEvent) {
       return createResponse('User does not have a corresponding row in test centre table', HttpStatus.NOT_FOUND);
     }
 
-    if (err instanceof TestCentreIdNotFoundError) {
-      error('TestCentreIdNotFoundError');
-      return createResponse('No TestCentreId found using search criteria', HttpStatus.NOT_FOUND);
+    if (err instanceof TestCentreCostCodeNotFoundError) {
+      error('TestCentreCostNotFoundError');
+      return createResponse('No TestCentreCostCode found using search criteria', HttpStatus.NOT_FOUND);
     }
 
     error((err instanceof Error) ? err.message : `Unknown error: ${err}`);

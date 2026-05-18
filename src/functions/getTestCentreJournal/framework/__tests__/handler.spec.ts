@@ -6,12 +6,12 @@ import * as response from '@dvsa/mes-microservice-common/application/api/create-
 import { APIGatewayEvent, APIGatewayProxyEvent, Context } from 'aws-lambda';
 import * as FindTestCentreJournal from '../../../../common/application/journal/FindJournal';
 import * as FindTestCentreByStaffNumber from '../../../../common/application/test-centre/FindTestCentreByStaffNumber';
-import * as FindTestCentreByTcID from '../../../../common/application/test-centre/FindTestCentreByID';
+import * as FindTestCentreByCostCode from '../../../../common/application/test-centre/FindTestCentreByCostCode';
 import { Mock, It } from 'typemoq';
 import { tokens } from '../../../getJournal/framework/__mocks__/authentication-token.mock';
 import { TestCentreDetail } from '../../../../common/domain/TestCentreDetailRecord';
 import {
-  TestCentreIdNotFoundError,
+  TestCentreCostCodeNotFoundError,
   TestCentreNotFoundError,
 } from '../../../../common/domain/errors/test-centre-not-found-error';
 
@@ -21,18 +21,18 @@ describe('getTestCentreJournal handler', () => {
     examiners: [
       { staffNumber: '123', name: 'Some User' },
     ],
-    testCentreIDs: [1234],
+    testCentreCostCodes: ['1234'],
   } as TestCentreDetail;
 
   let dummyApigwEvent: APIGatewayEvent;
   let createResponseSpy: jasmine.Spy;
 
   const moqFindTestCentreSNDetail = Mock.ofInstance(FindTestCentreByStaffNumber.findTestCentreDetail);
-  const moqFindTestCentreTcIdDetail = Mock.ofInstance(FindTestCentreByTcID.findTestCentreDetailsByID);
+  const moqFindTestCentreTcCostCodeDetail = Mock.ofInstance(FindTestCentreByCostCode.findTestCentreDetailsByCostCode);
 
   beforeEach(() => {
     moqFindTestCentreSNDetail.reset();
-    moqFindTestCentreTcIdDetail.reset();
+    moqFindTestCentreTcCostCodeDetail.reset();
 
     createResponseSpy = spyOn(response, 'createResponse');
     dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
@@ -43,7 +43,8 @@ describe('getTestCentreJournal handler', () => {
     });
     dummyApigwEvent.requestContext.authorizer = { staffNumber: '12345677' };
     spyOn(FindTestCentreByStaffNumber, 'findTestCentreDetail').and.callFake(moqFindTestCentreSNDetail.object);
-    spyOn(FindTestCentreByTcID, 'findTestCentreDetailsByID').and.callFake(moqFindTestCentreTcIdDetail.object);
+    spyOn(FindTestCentreByCostCode,
+          'findTestCentreDetailsByCostCode').and.callFake(moqFindTestCentreTcCostCodeDetail.object);
   });
 
   describe('given there is no staffNumber in authorizer response', () => {
@@ -105,7 +106,7 @@ describe('getTestCentreJournal handler', () => {
     });
   });
 
-  describe('getTestCentreJournal by TC ID', () => {
+  describe('getTestCentreJournal by TC Cost Code', () => {
     beforeEach(() => {
       dummyApigwEvent = lambdaTestUtils.mockEventCreator.createAPIGatewayEvent({
         headers: {
@@ -119,10 +120,10 @@ describe('getTestCentreJournal handler', () => {
         examinerRole: 'LDTM',
       };
     });
-    describe('given the findTestCentreDetailsByID returns a test centre row', () => {
+    describe('given the findTestCentreDetailsByCostCode returns a test centre row', () => {
       it('should return a successful response with the test centre detail', async () => {
         spyOn(FindTestCentreJournal, 'findJournalWithResponse').and.returnValue(Promise.resolve({}));
-        moqFindTestCentreTcIdDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve({
+        moqFindTestCentreTcCostCodeDetail.setup(x => x(It.isAny())).returns(() => Promise.resolve({
           ...fakeTestCentre,
           staffNumber: '',
         }));
@@ -145,21 +146,21 @@ describe('getTestCentreJournal handler', () => {
         });
       });
     });
-    describe('given FindTestCentreByTcID throws a TestCentreIdNotFoundError error', () => {
+    describe('given FindTestCentreByTcCostCode throws a TestCentreCostCodeNotFoundError error', () => {
       it('should return HTTP 404 NOT_FOUND', async () => {
-        moqFindTestCentreTcIdDetail.setup(x => x(It.isAny())).throws(new TestCentreIdNotFoundError());
+        moqFindTestCentreTcCostCodeDetail.setup(x => x(It.isAny())).throws(new TestCentreCostCodeNotFoundError());
         createResponseSpy.and.returnValue({ statusCode: 404 });
 
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(404);
         expect(response.createResponse)
-          .toHaveBeenCalledWith('No TestCentreId found using search criteria', 404);
+          .toHaveBeenCalledWith('No TestCentreCostCode found using search criteria', 404);
       });
     });
-    describe('given the FindTestCentreByTcID throws', () => {
+    describe('given the FindTestCentreByTcCostCode throws', () => {
       it('should respond with internal server error', async () => {
-        moqFindTestCentreTcIdDetail.setup(
+        moqFindTestCentreTcCostCodeDetail.setup(
           x => x(It.isAny())).throws(new Error('Unable to retrieve test centre journal'));
         createResponseSpy.and.returnValue({ statusCode: 500 });
 
@@ -180,7 +181,8 @@ describe('getTestCentreJournal handler', () => {
         const resp = await handler(dummyApigwEvent);
 
         expect(resp.statusCode).toBe(401);
-        expect(response.createResponse).toHaveBeenCalledWith('LDTM examiner role is required to search by TC id', 401);
+        expect(response.createResponse).toHaveBeenCalledWith(
+          'LDTM examiner role is required to search by TC cost code', 401);
       });
     });
   });

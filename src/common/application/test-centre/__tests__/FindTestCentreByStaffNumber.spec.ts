@@ -31,7 +31,7 @@ describe('FindTestCentreByStaffNumber', () => {
             { name: 'Joe Bloggs', staffNumber: '1234567', journal: {  } },
             { name: 'Other Person', staffNumber: '9876543', journal: {  } },
           ],
-          testCentreIDs: [123, 456],
+          testCentreCostCodes: ['123', '456'],
         } as TestCentreDetail);
       } catch (err) {
         fail();
