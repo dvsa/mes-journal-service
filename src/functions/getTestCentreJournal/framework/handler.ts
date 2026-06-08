@@ -36,7 +36,7 @@ export async function handler(event: APIGatewayProxyEvent) {
     // extract the test centre id from the path params if it exists;
     const testCentreCostCode = getPathParam(event.pathParameters, 'testCentreId');
 
-    error('path params', event.pathParameters);
+    debug('path params', event.pathParameters);
 
     // check for the existence of testCentre in path param to determine the type of request;
     const isSearchingByTestCentre = !!testCentreCostCode;
